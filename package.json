@@ -5,6 +5,7 @@
   "main": "dist/pencorrectplayer.cjs.js",
   "module": "dist/pencorrectplayer.esm.js",
   "browser": "dist/pencorrectplayer.umd.js",
+  "files": ["dist", "README.md"],
   "scripts": {
     "build": "rollup -c",
     "dev": "rollup -c -w",
