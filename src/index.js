@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-23 12:02:42
+ * @LastEditTime: 2023-03-23 18:06:16
  * @FilePath: /penCorrectPlayer/src/index.js
  * @Description:
  */
@@ -25,7 +25,7 @@ class CorrectStringPlayer {
 
     const ctx = this._canvas.getContext("2d");
     ctx.imageSmoothingEnabled = true;
-    ctx.scale(4, 4);
+    // ctx.scale(4, 4);
 
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
