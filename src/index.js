@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-23 18:06:16
+ * @LastEditTime: 2023-03-24 15:19:16
  * @FilePath: /penCorrectPlayer/src/index.js
  * @Description:
  */
@@ -14,6 +14,7 @@ class CorrectStringPlayer {
   _lines;
   _timer;
   _jsonData;
+  _myRequestAnimationFrame;
   constructor(canvas, config = {}) {
     this._canvas = canvas;
     this._config = {
@@ -127,11 +128,11 @@ class CorrectStringPlayer {
       }
 
       if (arr.length > 0) {
-        window.requestAnimationFrame(step);
+        this._myRequestAnimationFrame = window.requestAnimationFrame(step);
       }
     }
 
-    window.requestAnimationFrame(step);
+    this._myRequestAnimationFrame = window.requestAnimationFrame(step);
   }
 
   // todo:delete
@@ -181,6 +182,13 @@ class CorrectStringPlayer {
    * 停止
    */
   stop() {}
+
+  /**
+   * 销毁
+   */
+  destroy() {
+    this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame)
+  }
 }
 
 export default CorrectStringPlayer;
