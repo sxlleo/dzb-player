@@ -2,27 +2,30 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-24 15:19:16
- * @FilePath: /penCorrectPlayer/src/index.js
+ * @LastEditTime: 2023-03-29 16:40:44
+ * @FilePath: /penCorrectPlayer/src/index.ts
  * @Description:
  */
-const DefaultConfig = {
+import type { Config, PenPointer, Line, LinePointer } from './types'
+
+const DefaultConfig: any = {
   strokeWidth: 0.5,
 };
+
 class CorrectStringPlayer {
-  _config;
-  _lines;
-  _timer;
+  _canvas: HTMLCanvasElement
+  _config: Config;
+  _lines: Line[];
   _jsonData;
   _myRequestAnimationFrame;
-  constructor(canvas, config = {}) {
+  constructor(canvas: HTMLCanvasElement, config?: Config) {
     this._canvas = canvas;
     this._config = {
       ...DefaultConfig,
     };
 
-    this._jsonData = Array.from(config.jsonData);
-    this._lines = this._parseToLines(config.jsonData);
+    this._jsonData = Array.from(config?.penDatas);
+    this._lines = this._parseToLines(config?.penDatas);
 
     const ctx = this._canvas.getContext("2d");
     ctx.imageSmoothingEnabled = true;
@@ -35,13 +38,15 @@ class CorrectStringPlayer {
 
   /**
    * 解析成线的数组
+   * @param penDatas 画笔数据
+   * @returns 
    */
-  _parseToLines(data) {
-    const lines = [];
-    data.forEach((dot) => {
-      const pointer = { x: dot.x, y: dot.y };
+  _parseToLines(penDatas: PenPointer[]): Line[] {
+    const lines: Line[] = [];
+    penDatas.forEach((dot) => {
+      const pointer: LinePointer = { x: dot.x, y: dot.y };
       if (dot.type === "PEN_DOWN") {
-        const line = {
+        const line: Line = {
           points: [pointer],
         };
         lines.push(line);
@@ -56,14 +61,14 @@ class CorrectStringPlayer {
    * 直接展示
    */
   show() {
-    const ctx = this._canvas.getContext("2d");
+    const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
 
     ctx.beginPath();
-    this._lines.forEach((line) => {
+    this._lines.forEach((line: Line) => {
       const [firstPoint, ...others] = line.points;
       ctx.moveTo(firstPoint.x, firstPoint.y);
 
-      others?.forEach((pointer) => {
+      others?.forEach((pointer: LinePointer) => {
         ctx.lineTo(pointer.x, pointer.y);
       });
     });
@@ -73,13 +78,13 @@ class CorrectStringPlayer {
    * 播放展示
    */
   play() {
-    const ctx = this._canvas.getContext("2d");
+    const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
     //
     // let time = 0;
-    let start;
-    let arr = Array.from(this._jsonData);
-    let firstPointTimestramp = this._jsonData[0].timelong;
-    let prePointer;
+    let start: number | null;
+    let arr: PenPointer[] = Array.from(this._jsonData);
+    let firstPointTimestramp: number = this._jsonData[0].timelong;
+    let prePointer: PenPointer;
 
     console.log(
       "play time:",
@@ -92,17 +97,17 @@ class CorrectStringPlayer {
     // const MIN_MS = 150;
     // console.log(arr);
 
-    function step(timestamp) {
+    function step(timestamp: number) {
       if (start === undefined) {
         start = timestamp;
       }
       const elapsed = timestamp - start;
       if (elapsed > 0) {
         // 根据时间找到需要绘制出来的点
-        const endIndex = arr.findIndex((point) => {
+        const endIndex = arr.findIndex((point: PenPointer) => {
           return point.timelong - firstPointTimestramp > elapsed;
         });
-        const drawPoints = arr.splice(0, endIndex);
+        const drawPoints: PenPointer[] = arr.splice(0, endIndex);
         // console.log("endIndex", endIndex);
         if (drawPoints.length > 0) {
           // 绘制

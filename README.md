@@ -1,3 +1,12 @@
+<!--
+ * @Author: songxiaolin songxiaolin@aixuexi.com
+ * @Date: 2023-03-23 11:13:09
+ * @LastEditors: songxiaolin songxiaolin@aixuexi.com
+ * @LastEditTime: 2023-03-29 16:01:52
+ * @FilePath: /penCorrectPlayer/README.md
+ * @Description: 
+ * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
+-->
 ## 腾千里笔记复原
 解析腾千里数据，并根据数据进行笔记复原
 
@@ -10,7 +19,7 @@ npm install @aixuexi/penCorrectPlayer
 ```javascript
 // json数据中的元素
 type OptionData = {
-  force number
+  force: number
   penModel: number
   timelong: number
   type: 'PEN_DOWN' | 'PEN_MOVE'| 'PEN_UP'

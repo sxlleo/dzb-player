@@ -2,15 +2,16 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-29 15:08:31
+ * @LastEditTime: 2023-03-29 16:47:02
  * @FilePath: /penCorrectPlayer/rollup.config.js
  * @Description: 
  */
-const path = require('path')
-const babel = require('@rollup/plugin-babel');
-const json = require('@rollup/plugin-json');
-const nodeResolve = require('@rollup/plugin-node-resolve');
-const commonjs = require('@rollup/plugin-commonjs');
+import path from 'path';
+import babel from '@rollup/plugin-babel';
+import json from '@rollup/plugin-json';
+import nodeResolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs';
+import typescript from '@rollup/plugin-typescript';
 
 const pkg = require('./package.json');
 
@@ -20,6 +21,7 @@ const resolve = p => path.resolve(__dirname, p)
 const plugins = [
 	nodeResolve(),
 	commonjs(),
+	typescript(),
 	json(),
 	babel({
 		presets: ['@babel/preset-env'],
@@ -54,7 +56,7 @@ module.exports = [
 	// an array for the `output` option, where we can specify
 	// `file` and `format` for each target)
 	{
-		input: 'src/index.js',
+		input: 'src/index.ts',
 		external: resolveExternal(),
 		plugins,
 		output: Object.values(outputConfigs),
