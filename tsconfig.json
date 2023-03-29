@@ -1,6 +1,6 @@
 {
   "include": [
-    "env.d.ts", 
+    // "env.d.ts", 
     "src/**/*", 
   ],
   "exclude": [

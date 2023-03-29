@@ -1,5 +1,5 @@
 {
-  "include": ["rollup.config.*"],
+  "include": ["rollup.config.*", "package.json"],
   "compilerOptions": {
     "composite": true,
     "types": ["node"],

@@ -2,8 +2,8 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-29 16:47:02
- * @FilePath: /penCorrectPlayer/rollup.config.js
+ * @LastEditTime: 2023-03-29 17:29:06
+ * @FilePath: /penCorrectPlayer/rollup.config.ts
  * @Description: 
  */
 import path from 'path';
@@ -13,7 +13,7 @@ import nodeResolve from '@rollup/plugin-node-resolve'
 import commonjs from '@rollup/plugin-commonjs';
 import typescript from '@rollup/plugin-typescript';
 
-const pkg = require('./package.json');
+import pkg from './package.json';
 
 // resolve公共方法
 const resolve = p => path.resolve(__dirname, p)
@@ -43,7 +43,6 @@ const outputConfigs = {
 // 不需要参与bundle的第三方包
 function resolveExternal(){
 	return [
-		...Object.keys(pkg.dependencies || {}),
 		...Object.keys(pkg.devDependencies || {})
 	]
 }
