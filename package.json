@@ -3,10 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/pencorrectplayer.cjs.js",
-  "module": "dist/pencorrectplayer.esm.js",
-  "browser": "dist/pencorrectplayer.umd.js",
+  "module": "dist/pencorrectplayer.esm-bundler.js",
   "files": ["dist", "README.md"],
+  "filename": "penCorrectPlayer",
   "scripts": {
+    "prebuild": "rm -rf dist",
     "build": "rollup -c",
     "dev": "rollup -c -w",
     "test": "node test/test.js",
