@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-29 17:29:06
+ * @LastEditTime: 2023-03-29 17:35:35
  * @FilePath: /penCorrectPlayer/rollup.config.ts
  * @Description: 
  */
@@ -21,7 +21,11 @@ const resolve = p => path.resolve(__dirname, p)
 const plugins = [
 	nodeResolve(),
 	commonjs(),
-	typescript(),
+	typescript({
+		tsconfig: './tsconfig.json',
+		declaration: true,
+		declarationDir: 'types',
+	}),
 	json(),
 	babel({
 		presets: ['@babel/preset-env'],
