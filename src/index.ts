@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-29 16:40:44
+ * @LastEditTime: 2023-03-30 18:03:01
  * @FilePath: /penCorrectPlayer/src/index.ts
  * @Description:
  */
@@ -78,6 +78,7 @@ class CorrectStringPlayer {
    * 播放展示
    */
   play() {
+    const self = this;
     const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
     //
     // let time = 0;
@@ -133,7 +134,7 @@ class CorrectStringPlayer {
       }
 
       if (arr.length > 0) {
-        this._myRequestAnimationFrame = window.requestAnimationFrame(step);
+        self._myRequestAnimationFrame = window.requestAnimationFrame(step);
       }
     }
 

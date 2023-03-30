@@ -102,6 +102,7 @@ var CorrectStringPlayer = /** @class */ (function () {
         configurable: true,
         writable: true,
         value: function () {
+            var self = this;
             var ctx = this._canvas.getContext("2d");
             //
             // let time = 0;
@@ -148,7 +149,7 @@ var CorrectStringPlayer = /** @class */ (function () {
                     }
                 }
                 if (arr.length > 0) {
-                    this._myRequestAnimationFrame = window.requestAnimationFrame(step);
+                    self._myRequestAnimationFrame = window.requestAnimationFrame(step);
                 }
             }
             this._myRequestAnimationFrame = window.requestAnimationFrame(step);
