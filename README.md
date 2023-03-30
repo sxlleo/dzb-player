@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:13:09
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-29 16:01:52
+ * @LastEditTime: 2023-03-30 18:10:20
  * @FilePath: /penCorrectPlayer/README.md
  * @Description: 
  * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
@@ -34,9 +34,10 @@ type JsonDataType = OptionData[]
 #### 直接展示画笔轨迹
 ```javascript
 import Player from "@aixuexi/penCorrectPlayer"
+const penDatas: JsonDataType[] = []
 const canvas = document.getElementById("canvas");
 const player = new Player(canvas, {
-  jsonData,
+  penDatas,
 });
 player.show();
 ```
@@ -44,9 +45,10 @@ player.show();
 #### 播放展示画笔轨迹
 ```javascript
 import Player from "@aixuexi/penCorrectPlayer"
+const penDatas: JsonDataType[] = []
 const canvas = document.getElementById("canvas");
 const player = new Player(canvas, {
-  jsonData,
+  penDatas,
 });
 player.play();
 ```
