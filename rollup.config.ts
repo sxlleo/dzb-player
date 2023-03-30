@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-29 17:35:35
+ * @LastEditTime: 2023-03-30 10:25:33
  * @FilePath: /penCorrectPlayer/rollup.config.ts
  * @Description: 
  */
@@ -18,6 +18,7 @@ import pkg from './package.json';
 // resolve公共方法
 const resolve = p => path.resolve(__dirname, p)
 
+// 插件
 const plugins = [
 	nodeResolve(),
 	commonjs(),
@@ -33,6 +34,7 @@ const plugins = [
 		extensions: ['.js']
 	}),
 ]
+// 输出配置
 const outputConfigs = {
   'esm-bundler': {
     file: resolve(`dist/${pkg.filename}.esm-bundler.js`),
