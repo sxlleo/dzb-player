@@ -26,6 +26,7 @@
     "preserveValueImports": true,
     // Enforce using `import type` instead of `import` for types
     "importsNotUsedAsValues": "error",
+    "ignoreDeprecations": "5.0",
 
     // A few notes:
     // - Vue 3 supports ES2016+
