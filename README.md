@@ -1,12 +1,4 @@
-<!--
- * @Author: songxiaolin songxiaolin@aixuexi.com
- * @Date: 2023-03-23 11:13:09
- * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-30 18:38:52
- * @FilePath: /penCorrectPlayer/README.md
- * @Description: 
- * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
--->
+
 ## 腾千里笔记复原
 解析腾千里数据，并根据数据进行笔记复原
 
@@ -15,7 +7,13 @@
 npm install @aixuexi/penCorrectPlayer
 ```
 
-#### 直接展示画笔轨迹
+## 包内预览调试demo
+```javascript
+npm run preview
+```
+
+## 相关场景的使用case
+#### 初始化
 ```javascript
 import Player from "@aixuexi/penCorrectPlayer"
 const penDatas: PenPointer[] = []
@@ -23,16 +21,36 @@ const canvas = document.getElementById("canvas");
 const player = new Player(canvas, {
   penDatas,
 });
+```
+#### 直接展示画笔轨迹
+```javascript
 player.show();
 ```
 
 #### 播放展示画笔轨迹
 ```javascript
-import Player from "@aixuexi/penCorrectPlayer"
-const penDatas: PenPointer[] = []
-const canvas = document.getElementById("canvas");
-const player = new Player(canvas, {
-  penDatas,
-});
 player.play();
+```
+#### 暂停展示画笔轨迹
+```javascript
+player.pause();
+```
+#### 基于某个开始时间进行播放
+```javascript
+// 如果想基于某个开始时间进行播放，则需要先设置当前时间，再进行播放
+player.currentTime = 10 * 1000
+player.play()
+```
+
+#### 设置播放倍速
+```javascript
+player.rate = 10
+```
+#### 设置/获取开始时间
+```javascript
+player.currentTime = 10
+```
+#### 设置总时间
+```javascript
+player.totalTime = 10
 ```

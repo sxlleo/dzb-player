@@ -1,6 +1,6 @@
 {
   "name": "@aixuexi/penCorrectPlayer",
-  "version": "1.0.4",
+  "version": "1.0.3",
   "description": "",
   "main": "dist/penCorrectPlayer.cjs.js",
   "module": "dist/penCorrectPlayer.esm-bundler.js",
@@ -11,12 +11,12 @@
   "filename": "penCorrectPlayer",
   "scripts": {
     "prebuild": "rm -rf dist",
-    "dev": "npm run build:watch & npm run browser",
+    "dev": "npm run build:watch & npm run preview",
     "build": "rollup -c --bundleConfigAsCjs",
     "build:watch": "rollup -c --bundleConfigAsCjs -w",
     "test": "node test/test.js",
     "pretest": "npm run build",
-    "browser": "browser-sync start --server --files './dist/*'"
+    "preview": "browser-sync start --server --startPath /demo/index.html --files './dist/*'"
   },
   "author": "songxiaolin@aixuexi.com",
   "license": "ISC",
