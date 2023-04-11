@@ -2,8 +2,8 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 12:02:56
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-23 12:03:09
- * @FilePath: /penCorrectPlayer/index.html
+ * @LastEditTime: 2023-04-11 18:45:50
+ * @FilePath: /penCorrectPlayer/demo/index.html
  * @Description: 
  * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
 -->
@@ -14,8 +14,26 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <script src="../dist/penCorrectPlayer.global.js"></script>
+  <script type="module" src="./index.js"></script>
+  <style>
+    .control {
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 20px;
+    }
+  </style>
 </head>
 <body>
-  
-</body>
+  <canvas width="500" height="400"></canvas>
+  <div class="control">
+    <div>当前播放进度：<span id="current-time">0s</span></div>
+    <progress id="progress"></progress>
+    <div>总时长：<span id="total-time"></span></div>
+  </div>
+
+  <div class="rate">倍速：<input id="rate-input" type="number" value="1"/> <button id="sure-btn">确定</button></div>
+
+  <button id="pause">暂停</button ><button id='play'>播放</button>
 </html>

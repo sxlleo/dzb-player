@@ -7,30 +7,81 @@ var DefaultConfig = {
 };
 var CorrectStringPlayer = /** @class */ (function () {
     function CorrectStringPlayer(canvas, config) {
+        /**
+         * canvas节点
+         */
         Object.defineProperty(this, "_canvas", {
             enumerable: true,
             configurable: true,
             writable: true,
             value: void 0
         });
+        /**
+         * 配置
+         */
         Object.defineProperty(this, "_config", {
             enumerable: true,
             configurable: true,
             writable: true,
             value: void 0
         });
+        /**
+         * 线的数据
+         */
         Object.defineProperty(this, "_lines", {
             enumerable: true,
             configurable: true,
             writable: true,
             value: void 0
         });
-        Object.defineProperty(this, "_jsonData", {
+        /**
+         * 笔的数据
+         */
+        Object.defineProperty(this, "_penData", {
             enumerable: true,
             configurable: true,
             writable: true,
             value: void 0
         });
+        /**
+         * 轨迹总时长（毫秒）
+         */
+        Object.defineProperty(this, "_totalTime", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: void 0
+        });
+        /**
+         * 当前时间
+         */
+        Object.defineProperty(this, "_curTime", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 0
+        });
+        /**
+         * 播放倍速
+         */
+        Object.defineProperty(this, "_rate", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: 1
+        });
+        /**
+         * 正在播放中
+         */
+        Object.defineProperty(this, "_isplaying", {
+            enumerable: true,
+            configurable: true,
+            writable: true,
+            value: false
+        });
+        /**
+         * requestAnimationFrame动画id
+         */
         Object.defineProperty(this, "_myRequestAnimationFrame", {
             enumerable: true,
             configurable: true,
@@ -39,11 +90,10 @@ var CorrectStringPlayer = /** @class */ (function () {
         });
         this._canvas = canvas;
         this._config = tslib.__assign({}, DefaultConfig);
-        this._jsonData = Array.from(config === null || config === void 0 ? void 0 : config.penDatas);
+        this._penData = Array.from(config === null || config === void 0 ? void 0 : config.penDatas);
         this._lines = this._parseToLines(config === null || config === void 0 ? void 0 : config.penDatas);
         var ctx = this._canvas.getContext("2d");
         ctx.imageSmoothingEnabled = true;
-        // ctx.scale(4, 4);
         ctx.lineJoin = "round";
         ctx.lineCap = "round";
         ctx.lineWidth = this._config.strokeWidth;
@@ -102,29 +152,33 @@ var CorrectStringPlayer = /** @class */ (function () {
         configurable: true,
         writable: true,
         value: function () {
-            var self = this;
+            this._isplaying = true;
             var ctx = this._canvas.getContext("2d");
-            //
-            // let time = 0;
-            var start;
-            var arr = Array.from(this._jsonData);
-            var firstPointTimestramp = this._jsonData[0].timelong;
+            var arr = Array.from(this._penData);
+            var firstPointTimestramp = this._penData[0].timelong;
             var prePointer;
-            console.log("play time:", (this._jsonData[this._jsonData.length - 1].timelong -
-                this._jsonData[0].timelong) /
+            console.log("play time:", (this._penData[this._penData.length - 1].timelong -
+                this._penData[0].timelong) /
                 (1000 * 60));
-            // 设置动画执行频率
-            // const MIN_MS = 150;
-            // console.log(arr);
+            // 动画上一次的时间戳
+            var preTimestamp;
+            // 动画当前的时间戳
+            var currentTimestamp;
             function step(timestamp) {
-                if (start === undefined) {
-                    start = timestamp;
+                var _this = this;
+                if (preTimestamp === undefined) {
+                    preTimestamp = timestamp;
                 }
-                var elapsed = timestamp - start;
-                if (elapsed > 0) {
+                currentTimestamp = timestamp;
+                // 改变的时间
+                var changTime = this._rate * (currentTimestamp - preTimestamp);
+                // console.log("@@@@@", currentTimestamp,preTimestamp, changTime, self._curTime)
+                // 设置当前时间
+                this._curTime += changTime;
+                if (this._curTime > 0) {
                     // 根据时间找到需要绘制出来的点
                     var endIndex = arr.findIndex(function (point) {
-                        return point.timelong - firstPointTimestramp > elapsed;
+                        return point.timelong - firstPointTimestramp > _this._curTime;
                     });
                     var drawPoints_1 = arr.splice(0, endIndex);
                     // console.log("endIndex", endIndex);
@@ -149,11 +203,67 @@ var CorrectStringPlayer = /** @class */ (function () {
                     }
                 }
                 if (arr.length > 0) {
-                    self._myRequestAnimationFrame = window.requestAnimationFrame(step);
+                    this._myRequestAnimationFrame = window.requestAnimationFrame(step.bind(this));
                 }
+                else {
+                    this._isplaying = false;
+                }
+                preTimestamp = currentTimestamp;
             }
-            this._myRequestAnimationFrame = window.requestAnimationFrame(step);
+            this._myRequestAnimationFrame = window.requestAnimationFrame(step.bind(this));
         }
+    });
+    Object.defineProperty(CorrectStringPlayer.prototype, "_reset", {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: function () {
+            this._curTime = 0;
+            this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame);
+        }
+    });
+    Object.defineProperty(CorrectStringPlayer.prototype, "totalTime", {
+        /**
+         * 获取轨迹总时长，单位毫秒
+         */
+        get: function () {
+            var _a, _b, _c, _d;
+            var firstTimestamp = (_b = (_a = this._penData[0]) === null || _a === void 0 ? void 0 : _a.timelong) !== null && _b !== void 0 ? _b : 0;
+            var lastTimestamp = (_d = (_c = this._penData[this._penData.length - 1]) === null || _c === void 0 ? void 0 : _c.timelong) !== null && _d !== void 0 ? _d : 0;
+            return lastTimestamp - firstTimestamp;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(CorrectStringPlayer.prototype, "currentTime", {
+        /**
+         * 获取当前时间
+         */
+        get: function () {
+            return this._curTime;
+        },
+        set: function (value) {
+            this._curTime = value;
+        },
+        enumerable: false,
+        configurable: true
+    });
+    Object.defineProperty(CorrectStringPlayer.prototype, "rate", {
+        /**
+         * 倍速
+         */
+        get: function () {
+            return this._rate;
+        },
+        /**
+         * 设置倍速
+         * @param value 倍速
+         */
+        set: function (value) {
+            this._rate = value;
+        },
+        enumerable: false,
+        configurable: true
     });
     // todo:delete
     Object.defineProperty(CorrectStringPlayer.prototype, "test", {
@@ -199,7 +309,10 @@ var CorrectStringPlayer = /** @class */ (function () {
         enumerable: false,
         configurable: true,
         writable: true,
-        value: function () { }
+        value: function () {
+            this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame);
+            this._isplaying = false;
+        }
     });
     /**
      * 停止

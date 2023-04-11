@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-03-30 18:03:01
+ * @LastEditTime: 2023-04-11 18:37:21
  * @FilePath: /penCorrectPlayer/src/index.ts
  * @Description:
  */
@@ -13,23 +13,55 @@ const DefaultConfig: any = {
 };
 
 class CorrectStringPlayer {
+  /**
+   * canvas节点
+   */
   _canvas: HTMLCanvasElement
+  /**
+   * 配置
+   */
   _config: Config;
+  /**
+   * 线的数据
+   */
   _lines: Line[];
-  _jsonData;
-  _myRequestAnimationFrame;
+  /**
+   * 笔的数据
+   */
+  _penData: PenPointer[];
+  /**
+   * 轨迹总时长（毫秒）
+   */
+  _totalTime: number
+  /**
+   * 当前时间
+   */
+  _curTime: number = 0
+  /**
+   * 播放倍速
+   */
+  _rate: number = 1;
+
+  /**
+   * 正在播放中
+   */
+  _isplaying: boolean = false;
+
+  /**
+   * requestAnimationFrame动画id
+   */
+  _myRequestAnimationFrame: number;
   constructor(canvas: HTMLCanvasElement, config?: Config) {
     this._canvas = canvas;
     this._config = {
       ...DefaultConfig,
     };
 
-    this._jsonData = Array.from(config?.penDatas);
+    this._penData = Array.from(config?.penDatas);
     this._lines = this._parseToLines(config?.penDatas);
 
     const ctx = this._canvas.getContext("2d");
     ctx.imageSmoothingEnabled = true;
-    // ctx.scale(4, 4);
 
     ctx.lineJoin = "round";
     ctx.lineCap = "round";
@@ -78,35 +110,42 @@ class CorrectStringPlayer {
    * 播放展示
    */
   play() {
-    const self = this;
+    this._isplaying = true
+
     const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
-    //
-    // let time = 0;
-    let start: number | null;
-    let arr: PenPointer[] = Array.from(this._jsonData);
-    let firstPointTimestramp: number = this._jsonData[0].timelong;
+    let arr: PenPointer[] = Array.from(this._penData);
+    let firstPointTimestramp: number = this._penData[0].timelong;
     let prePointer: PenPointer;
 
     console.log(
       "play time:",
-      (this._jsonData[this._jsonData.length - 1].timelong -
-        this._jsonData[0].timelong) /
+      (this._penData[this._penData.length - 1].timelong -
+        this._penData[0].timelong) /
         (1000 * 60)
     );
 
-    // 设置动画执行频率
-    // const MIN_MS = 150;
-    // console.log(arr);
 
+    // 动画上一次的时间戳
+    let preTimestamp: number;
+    // 动画当前的时间戳
+    let currentTimestamp: number;
     function step(timestamp: number) {
-      if (start === undefined) {
-        start = timestamp;
+      if (preTimestamp === undefined) {
+        preTimestamp = timestamp;
       }
-      const elapsed = timestamp - start;
-      if (elapsed > 0) {
+      currentTimestamp = timestamp;
+      // 改变的时间
+      const changTime = this._rate * (currentTimestamp - preTimestamp);
+      // console.log("@@@@@", currentTimestamp,preTimestamp, changTime, self._curTime)
+
+      // 设置当前时间
+      this._curTime += changTime;
+
+
+      if (this._curTime > 0) {
         // 根据时间找到需要绘制出来的点
         const endIndex = arr.findIndex((point: PenPointer) => {
-          return point.timelong - firstPointTimestramp > elapsed;
+          return point.timelong - firstPointTimestramp > this._curTime;
         });
         const drawPoints: PenPointer[] = arr.splice(0, endIndex);
         // console.log("endIndex", endIndex);
@@ -134,11 +173,56 @@ class CorrectStringPlayer {
       }
 
       if (arr.length > 0) {
-        self._myRequestAnimationFrame = window.requestAnimationFrame(step);
+        this._myRequestAnimationFrame = window.requestAnimationFrame(step.bind(this));
       }
+      else {
+        this._isplaying = false
+      }
+
+      preTimestamp = currentTimestamp;
     }
 
-    this._myRequestAnimationFrame = window.requestAnimationFrame(step);
+    this._myRequestAnimationFrame = window.requestAnimationFrame(step.bind(this));
+  }
+
+  _reset():void {
+    this._curTime = 0
+    this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame)
+  }
+
+  /**
+   * 获取轨迹总时长，单位毫秒
+   */
+  get totalTime():number {
+    const firstTimestamp = this._penData[0]?.timelong ?? 0
+    const lastTimestamp = this._penData[this._penData.length - 1]?.timelong ?? 0
+    return lastTimestamp - firstTimestamp;
+  }
+
+  /**
+   * 获取当前时间
+   */
+  get currentTime(): number {
+    return this._curTime
+  }
+
+  set currentTime(value: number) {
+    this._curTime = value
+  }
+
+  /**
+   * 倍速
+   */
+  get rate(): number {
+    return this._rate
+  }
+
+  /**
+   * 设置倍速
+   * @param value 倍速
+   */
+  set rate(value: number) {
+    this._rate = value
   }
 
   // todo:delete
@@ -183,7 +267,10 @@ class CorrectStringPlayer {
   /**
    * 暂停
    */
-  pause() {}
+  pause() {
+    this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame)
+    this._isplaying = false
+  }
   /**
    * 停止
    */
