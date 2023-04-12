@@ -6,7 +6,8 @@
   "module": "dist/penCorrectPlayer.esm-bundler.js",
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "README.md"
   ],
   "filename": "penCorrectPlayer",
   "scripts": {
