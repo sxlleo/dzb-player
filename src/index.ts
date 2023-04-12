@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-04-11 18:37:21
+ * @LastEditTime: 2023-04-12 15:55:42
  * @FilePath: /penCorrectPlayer/src/index.ts
  * @Description:
  */
@@ -21,10 +21,6 @@ class CorrectStringPlayer {
    * 配置
    */
   _config: Config;
-  /**
-   * 线的数据
-   */
-  _lines: Line[];
   /**
    * 笔的数据
    */
@@ -48,6 +44,11 @@ class CorrectStringPlayer {
   _isplaying: boolean = false;
 
   /**
+   * 剩余未绘制的画笔轨迹
+   */
+  _leftPenData: PenPointer[];
+
+  /**
    * requestAnimationFrame动画id
    */
   _myRequestAnimationFrame: number;
@@ -55,12 +56,13 @@ class CorrectStringPlayer {
     this._canvas = canvas;
     this._config = {
       ...DefaultConfig,
+      ...config
     };
 
     this._penData = Array.from(config?.penDatas);
-    this._lines = this._parseToLines(config?.penDatas);
 
-    const ctx = this._canvas.getContext("2d");
+    // 初始化设置
+    const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
     ctx.imageSmoothingEnabled = true;
 
     ctx.lineJoin = "round";
@@ -89,14 +91,18 @@ class CorrectStringPlayer {
 
     return lines;
   }
+
   /**
    * 直接展示
    */
-  show() {
+  show(): void {
     const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
+    // 所有线数据
+    const lines: Line[] = this._parseToLines(this._penData);
+    if(lines.length === 0) return;
 
     ctx.beginPath();
-    this._lines.forEach((line: Line) => {
+    lines.forEach((line: Line) => {
       const [firstPoint, ...others] = line.points;
       ctx.moveTo(firstPoint.x, firstPoint.y);
 
@@ -106,14 +112,18 @@ class CorrectStringPlayer {
     });
     ctx.stroke();
   }
+
   /**
    * 播放展示
    */
-  play() {
+  play(): void {
+    if(this._curTime === 0) this._clearCanvas();
     this._isplaying = true
 
+    // 如果还有剩余未绘制的，则继续绘制
+    if(!this._leftPenData) this._leftPenData = Array.from(this._penData);
+
     const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
-    let arr: PenPointer[] = Array.from(this._penData);
     let firstPointTimestramp: number = this._penData[0].timelong;
     let prePointer: PenPointer;
 
@@ -144,11 +154,12 @@ class CorrectStringPlayer {
 
       if (this._curTime > 0) {
         // 根据时间找到需要绘制出来的点
-        const endIndex = arr.findIndex((point: PenPointer) => {
-          return point.timelong - firstPointTimestramp > this._curTime;
-        });
-        const drawPoints: PenPointer[] = arr.splice(0, endIndex);
-        // console.log("endIndex", endIndex);
+        const drawPoints: PenPointer[] = this._leftPenData.filter((point: PenPointer) => {
+          return point.timelong - firstPointTimestramp <= this._curTime;
+        })
+        this._leftPenData.splice(0, drawPoints.length);
+
+        // console.log("endIndex", drawPoints, endIndex);
         if (drawPoints.length > 0) {
           // 绘制
           ctx.beginPath();
@@ -172,22 +183,22 @@ class CorrectStringPlayer {
         }
       }
 
-      if (arr.length > 0) {
+      if (this._leftPenData.length > 0) {
+        // 继续animation
         this._myRequestAnimationFrame = window.requestAnimationFrame(step.bind(this));
+        console.log("继续", this._leftPenData[0].timelong - firstPointTimestramp, this._curTime)
       }
       else {
+        console.log("终止")
+        // 终止animation
         this._isplaying = false
       }
 
+      // 记录上一次的时间戳
       preTimestamp = currentTimestamp;
     }
 
     this._myRequestAnimationFrame = window.requestAnimationFrame(step.bind(this));
-  }
-
-  _reset():void {
-    this._curTime = 0
-    this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame)
   }
 
   /**
@@ -225,62 +236,47 @@ class CorrectStringPlayer {
     this._rate = value
   }
 
-  // todo:delete
-  test() {
-    const ctx = this._canvas.getContext("2d");
-    //demo2
-    const arr = Array.from({ length: 1 });
-    console.log(arr);
-    arr.forEach(() => {
-      ctx.beginPath();
-      ctx.moveTo(10, 10);
-      ctx.lineTo(20, 10);
-      ctx.stroke();
-    });
-
-    //demo1
-    // ctx.beginPath();
-    // ctx.moveTo(10, 10);
-    // ctx.lineTo(20, 10);
-    // ctx.stroke();
-
-    // ctx.beginPath();
-    // // ctx.moveTo(10, 10);
-
-    // ctx.moveTo(20, 10);
-    // ctx.lineTo(100, 10);
-    // ctx.stroke();
-
-    // ctx.moveTo(20, 10);
-    // ctx.lineTo(100, 10);
-    // ctx.stroke();
-
-    // ctx.moveTo(20, 10);
-    // ctx.lineTo(100, 10);
-    // ctx.stroke();
-
-    // ctx.moveTo(20, 10);
-    // ctx.lineTo(100, 10);
-    // ctx.stroke();
-  }
-
   /**
    * 暂停
    */
-  pause() {
+  pause(): void {
     this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame)
     this._isplaying = false
   }
+
   /**
-   * 停止
+   * 继续添加画笔数据，添加数据会自动触发播放（持续添加的数据在时间上需要是持续的）
+   * @param penData 画笔数据
    */
-  stop() {}
+  appendPenData(penData: PenPointer[]):void {
+    if(penData?.length > 0) {
+      console.log("append", this._leftPenData)
+      Array.prototype.push.apply(this._penData, penData)
+      Array.prototype.push.apply(this._leftPenData, penData)
+      // 继续播放
+      if(!this._isplaying) this.play()
+    }
+  }
+
+  /**
+   * 清理画布
+   */
+  _clearCanvas():void {
+    if(this._canvas?.parentNode) {
+      this._canvas.getContext('2d')?.clearRect(0, 0, this._canvas.width, this._canvas.height)
+      this._leftPenData = null
+    }
+  }
 
   /**
    * 销毁
    */
   destroy() {
     this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame)
+    if(this._canvas?.parentNode) {
+      this._canvas.getContext('2d')?.clearRect(0, 0, this._canvas.width, this._canvas.height)
+    }
+    this._canvas = null
   }
 }
 

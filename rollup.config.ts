@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-04-11 15:52:23
+ * @LastEditTime: 2023-04-12 15:16:42
  * @FilePath: /penCorrectPlayer/rollup.config.ts
  * @Description: 
  */
@@ -87,6 +87,15 @@ function createConfig(format, plugins = []) {
 				exclude: 'node_modules/**',
 				extensions: ['.js']
 			}),
+			terser({
+				module: /^esm/.test(format),
+				compress: {
+					ecma: 2015,
+					pure_getters: true,
+					drop_console: true
+				},
+				safari10: true
+			}),
 			...plugins
 		],
 		output: {
@@ -101,21 +110,7 @@ function createConfig(format, plugins = []) {
 
 
 defaultFormats.forEach(format => {
-	if(format === 'global') {
-		packageConfigs.push(createConfig(format, [
-      terser({
-        module: /^esm/.test(format),
-        compress: {
-          ecma: 2015,
-          pure_getters: true
-        },
-        safari10: true
-      })
-    ]))
-	}
-	else {
-		packageConfigs.push(createConfig(format))
-	}
+	packageConfigs.push(createConfig(format))
 })
 
 

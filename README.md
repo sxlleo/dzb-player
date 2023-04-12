@@ -54,3 +54,8 @@ player.currentTime = 10
 ```javascript
 player.totalTime = 10
 ```
+
+#### 支持持续添加画笔轨迹数据进行播放（持续添加的数据时间上需要是持续的）
+```javascript
+player.appendPenData(penDatas)
+```
