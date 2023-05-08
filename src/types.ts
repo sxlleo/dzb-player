@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-29 16:01:08
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-04-12 10:59:04
+ * @LastEditTime: 2023-05-06 17:26:44
  * @FilePath: /penCorrectPlayer/src/types.ts
  * @Description: 
  * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
@@ -11,11 +11,10 @@
  * 画笔轨迹点数据
  */
 type PenPointer = {
-  force: number
-  penModel: number
-  timelong: number
+  force?: number
+  penModel?: number
+  ts: number
   type: 'PEN_DOWN' | 'PEN_MOVE'| 'PEN_UP'
-  width: number
   x: number
   y: number
 }
@@ -25,11 +24,17 @@ type PenPointer = {
  */
 type Config = {
   // 线的宽度
-  strokeWidth: number
+  strokeWidth?: number
   // 画笔数据
   penDatas: PenPointer[]
-  // 是否是直播
-  isLive: boolean
+  /**
+   * 真实纸张宽度，单位是mm
+   */
+  realPageWidth: number
+  /**
+   * 真实纸张高度，单位是mm
+   */
+  realPageHeight: number
 }
 
 /**

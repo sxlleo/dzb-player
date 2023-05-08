@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-04-12 15:16:42
+ * @LastEditTime: 2023-05-06 17:30:06
  * @FilePath: /penCorrectPlayer/rollup.config.ts
  * @Description: 
  */
@@ -19,7 +19,6 @@ import pkg from './package.json';
 
 // resolve公共方法
 const resolve = p => path.resolve(__dirname, p)
-
 
 // 插件
 const plugins = [

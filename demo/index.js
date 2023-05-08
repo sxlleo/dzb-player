@@ -2,25 +2,19 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-04-11 16:27:45
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-04-12 15:35:21
+ * @LastEditTime: 2023-05-06 17:35:42
  * @FilePath: /penCorrectPlayer/demo/index.js
  * @Description: 
- * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
  */
-import data from "./biji.js"
+import data from "./biji1.js"
 
 const canvas = document.getElementsByTagName("canvas")[0];
-console.log("first", canvas)
-const context = canvas.getContext('2d')
-context.scale(4,4)
 
-const player = new PenPlayer(canvas, {
-  penDatas: getPenData(),
-})
-// player.rate = 10
+let player;
+let penData = getPenData()
 
 function getPenData() {
-  return data.splice(0, 100)
+  return data.splice(0, 10000)
 }
 
 /**
@@ -32,7 +26,7 @@ function initializeTimer() {
     const currentTime = parseInt(player.currentTime / 1000), totalTime = parseInt(player.totalTime / 1000)
     curTimeEle.innerText = `${currentTime}s`
     totalTimeEle.innerText = `${totalTime}s`
-    console.log(currentTime, totalTime)
+    console.log(`当前时间：${currentTime}`, `总时间：${totalTime}`)
     progressEle.setAttribute('value', currentTime)
     progressEle.setAttribute('max', totalTime)
   }, 1000)
@@ -65,6 +59,7 @@ function initializePause() {
   playBtn.addEventListener('click', function() {
     // 直接设置播放器倍率
     player.play()
+    console.log("播放")
   })
 }
 
@@ -92,6 +87,11 @@ function initializeAppendData() {
 }
 
 function init() {
+  player = new PenPlayer(canvas, {
+    penDatas: penData,
+    realPageWidth: 210,
+    realPageHeight: 297
+  })
   initializeTimer()
   initializeRate()
   initializePause()

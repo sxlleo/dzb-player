@@ -2,15 +2,26 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-04-12 15:55:42
+ * @LastEditTime: 2023-05-08 10:06:18
  * @FilePath: /penCorrectPlayer/src/index.ts
  * @Description:
  */
 import type { Config, PenPointer, Line, LinePointer } from './types'
 
-const DefaultConfig: any = {
-  strokeWidth: 0.5,
+/**
+ * 默认配置
+ */
+const DefaultConfig: Config = {
+  penDatas: [],
+  strokeWidth: 1,
+  realPageWidth: 210,
+  realPageHeight: 297
 };
+
+/** 码点宽度 */
+const x_point_size = 1.524
+/** 码点宽度 */
+const y_point_size = 1.524
 
 class CorrectStringPlayer {
   /**
@@ -52,6 +63,7 @@ class CorrectStringPlayer {
    * requestAnimationFrame动画id
    */
   _myRequestAnimationFrame: number;
+  
   constructor(canvas: HTMLCanvasElement, config?: Config) {
     this._canvas = canvas;
     this._config = {
@@ -60,9 +72,13 @@ class CorrectStringPlayer {
     };
 
     this._penData = Array.from(config?.penDatas);
+  }
 
-    // 初始化设置
-    const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
+  /**
+   * 绘制之前设置画笔的配置
+   * @param ctx 
+   */
+  _setLineConfigBeforePath(ctx:CanvasRenderingContext2D):void {
     ctx.imageSmoothingEnabled = true;
 
     ctx.lineJoin = "round";
@@ -78,7 +94,8 @@ class CorrectStringPlayer {
   _parseToLines(penDatas: PenPointer[]): Line[] {
     const lines: Line[] = [];
     penDatas.forEach((dot) => {
-      const pointer: LinePointer = { x: dot.x, y: dot.y };
+      const newDot = this._transformPagePointToCanvasPoint(dot);
+      const pointer: LinePointer = { x: newDot.x, y: newDot.y };
       if (dot.type === "PEN_DOWN") {
         const line: Line = {
           points: [pointer],
@@ -93,6 +110,21 @@ class CorrectStringPlayer {
   }
 
   /**
+   * 将腾千里点阵纸上的点转换成canvas上可以直接绘制的点
+   * @param point 点
+   * @returns 
+   */
+  _transformPagePointToCanvasPoint(point: PenPointer): PenPointer {
+    let x = this._roundNumber(this._canvas.width * point.x / (this._config.realPageWidth / x_point_size));
+    let y = this._roundNumber(this._canvas.height * point.y / (this._config.realPageHeight / y_point_size));
+    return {...point, x, y}
+  }
+
+  _roundNumber(num: number) {
+    return Math.round(num * Math.pow(10, 15)) / Math.pow(10, 15)
+  }
+
+  /**
    * 直接展示
    */
   show(): void {
@@ -102,6 +134,7 @@ class CorrectStringPlayer {
     if(lines.length === 0) return;
 
     ctx.beginPath();
+    this._setLineConfigBeforePath(ctx);
     lines.forEach((line: Line) => {
       const [firstPoint, ...others] = line.points;
       ctx.moveTo(firstPoint.x, firstPoint.y);
@@ -124,13 +157,13 @@ class CorrectStringPlayer {
     if(!this._leftPenData) this._leftPenData = Array.from(this._penData);
 
     const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
-    let firstPointTimestramp: number = this._penData[0].timelong;
+    let firstPointTimestramp: number = this._penData[0].ts;
     let prePointer: PenPointer;
 
     console.log(
       "play time:",
-      (this._penData[this._penData.length - 1].timelong -
-        this._penData[0].timelong) /
+      (this._penData[this._penData.length - 1].ts -
+        this._penData[0].ts) /
         (1000 * 60)
     );
 
@@ -146,7 +179,7 @@ class CorrectStringPlayer {
       currentTimestamp = timestamp;
       // 改变的时间
       const changTime = this._rate * (currentTimestamp - preTimestamp);
-      // console.log("@@@@@", currentTimestamp,preTimestamp, changTime, self._curTime)
+      console.log("@@@@@", currentTimestamp,preTimestamp, changTime, this._curTime)
 
       // 设置当前时间
       this._curTime += changTime;
@@ -155,7 +188,7 @@ class CorrectStringPlayer {
       if (this._curTime > 0) {
         // 根据时间找到需要绘制出来的点
         const drawPoints: PenPointer[] = this._leftPenData.filter((point: PenPointer) => {
-          return point.timelong - firstPointTimestramp <= this._curTime;
+          return point.ts - firstPointTimestramp <= this._curTime;
         })
         this._leftPenData.splice(0, drawPoints.length);
 
@@ -163,30 +196,32 @@ class CorrectStringPlayer {
         if (drawPoints.length > 0) {
           // 绘制
           ctx.beginPath();
+          this._setLineConfigBeforePath(ctx)
           if (["PEN_DOWN", "PEN_MOVE"].includes(prePointer?.type)) {
             ctx.moveTo(prePointer.x, prePointer.y);
           }
           drawPoints.forEach((point, index) => {
-            if (point.type === "PEN_DOWN") {
-              ctx.moveTo(point.x, point.y);
+            const newPoint = this._transformPagePointToCanvasPoint(point);
+            if (newPoint.type === "PEN_DOWN") {
+              ctx.moveTo(newPoint.x, newPoint.y);
             } else {
-              ctx.lineTo(point.x, point.y);
+              ctx.lineTo(newPoint.x, newPoint.y);
             }
             if (index === drawPoints.length - 1) {
-              prePointer = point;
+              prePointer = newPoint;
             }
           });
           ctx.stroke();
         } else {
           // console.log("elapsed", elapsed);
-          // console.log("arr first", arr[0].timelong - firstPointTimestramp);
+          // console.log("arr first", arr[0].ts - firstPointTimestramp);
         }
       }
 
       if (this._leftPenData.length > 0) {
         // 继续animation
         this._myRequestAnimationFrame = window.requestAnimationFrame(step.bind(this));
-        console.log("继续", this._leftPenData[0].timelong - firstPointTimestramp, this._curTime)
+        console.log("继续", this._leftPenData[0].ts - firstPointTimestramp, this._curTime)
       }
       else {
         console.log("终止")
@@ -205,8 +240,8 @@ class CorrectStringPlayer {
    * 获取轨迹总时长，单位毫秒
    */
   get totalTime():number {
-    const firstTimestamp = this._penData[0]?.timelong ?? 0
-    const lastTimestamp = this._penData[this._penData.length - 1]?.timelong ?? 0
+    const firstTimestamp = this._penData[0]?.ts ?? 0
+    const lastTimestamp = this._penData[this._penData.length - 1]?.ts ?? 0
     return lastTimestamp - firstTimestamp;
   }
 
