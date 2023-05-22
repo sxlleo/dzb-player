@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 12:02:56
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-06 17:24:33
+ * @LastEditTime: 2023-05-18 16:13:33
  * @FilePath: /penCorrectPlayer/demo/index.html
  * @Description: 
  * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
@@ -16,9 +16,11 @@
   <title>Document</title>
   <script src="../dist/penCorrectPlayer.global.js"></script>
   <script type="module" src="./index.js"></script>
+  <!-- <script type="module" src="./index1.js"></script> -->
   <style>
     .canvas-container {
       position: relative;
+      display: flex;
     }
     canvas{
       z-index: 1;
@@ -33,9 +35,10 @@
   </style>
 </head>
 <body>
+  
   <div class="canvas-container">
     <canvas width="595" height="595"></canvas>
-    <div class="rect"></div>
+    <canvas width="595" height="595"></canvas>
   </div>
   <div class="control">
     <div>当前播放进度：<span id="current-time">0s</span></div>

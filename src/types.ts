@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-29 16:01:08
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-06 17:26:44
+ * @LastEditTime: 2023-05-22 18:00:26
  * @FilePath: /penCorrectPlayer/src/types.ts
  * @Description: 
  * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
@@ -11,6 +11,7 @@
  * 画笔轨迹点数据
  */
 type PenPointer = {
+  strokeStyle?: string
   force?: number
   penModel?: number
   ts: number
@@ -25,8 +26,6 @@ type PenPointer = {
 type Config = {
   // 线的宽度
   strokeWidth?: number
-  // 画笔数据
-  penDatas: PenPointer[]
   /**
    * 真实纸张宽度，单位是mm
    */
@@ -40,15 +39,16 @@ type Config = {
 /**
  * 线点数据
  */
-type LinePointer = {
+type Pointer = {
   x: number
   y: number
+  strokeStyle?: string
 }
 /**
  * 线数据
  */
 type Line = {
-  points: LinePointer[]
+  points: Pointer[]
 }
 
-export type { Config, PenPointer, Line, LinePointer };
+export type { Config, PenPointer, Line, Pointer };

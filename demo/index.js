@@ -2,11 +2,11 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-04-11 16:27:45
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-06 17:35:42
+ * @LastEditTime: 2023-05-22 18:16:27
  * @FilePath: /penCorrectPlayer/demo/index.js
  * @Description: 
  */
-import data from "./biji1.js"
+import data from "./biji3.js"
 
 const canvas = document.getElementsByTagName("canvas")[0];
 
@@ -87,11 +87,11 @@ function initializeAppendData() {
 }
 
 function init() {
-  player = new PenPlayer(canvas, {
-    penDatas: penData,
-    realPageWidth: 210,
-    realPageHeight: 297
+  const { CorrectStringPlayer } = PenPlayer
+  player = new CorrectStringPlayer({
+    12313: canvas
   })
+  player.appendPagePenData(12313, penData, canvas)
   initializeTimer()
   initializeRate()
   initializePause()

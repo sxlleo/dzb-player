@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-06 17:30:06
+ * @LastEditTime: 2023-05-22 18:01:37
  * @FilePath: /penCorrectPlayer/rollup.config.ts
  * @Description: 
  */
@@ -65,7 +65,8 @@ function createConfig(format, plugins = []) {
 		if(isGlobalBuild) return []
 
 		return [
-			...Object.keys(pkg.devDependencies || {})
+			...Object.keys(pkg.devDependencies || {}),
+			...Object.keys(pkg.dependencies || {})
 		]
 	}
 

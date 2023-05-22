@@ -14,12 +14,15 @@ npm run preview
 ## 相关场景的使用case
 #### 初始化
 ```javascript
-import type { PenPointer } from '@aixuexi/penCorrectPlayer/dist/types/types'
+import type { PenPointer, PageCanvas } from '@aixuexi/penCorrectPlayer/dist/types/types'
 import Player from "@aixuexi/penCorrectPlayer"
 
 const penDatas: PenPointer[] = []
 const canvas = document.getElementById("canvas");
-const player = new Player(canvas, {
+const pageCanvas: PageCanvas = {
+  1: canvas
+}
+const player = new Player(pageCanvas, {
   penDatas,
 });
 ```
@@ -39,7 +42,7 @@ player.pause();
 #### 基于某个开始时间进行播放
 ```javascript
 // 如果想基于某个开始时间进行播放，则需要先设置当前时间，再进行播放
-player.currentTime = 10 * 1000
+player.seek(10 * 1000)
 player.play()
 ```
 
