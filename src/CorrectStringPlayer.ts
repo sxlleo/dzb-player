@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-22 18:04:34
+ * @LastEditTime: 2023-05-23 10:28:03
  * @FilePath: /penCorrectPlayer/src/CorrectStringPlayer.ts
  * @Description:
  */
@@ -92,6 +92,7 @@ class CorrectStringPlayer extends MultiPages {
    * 播放展示
    */
   play(): void {
+    console.log("_firstPointTimestamp", this._firstPointTimestamp)
     if(this._isplaying) return;
     this._isplaying = true
 
@@ -151,7 +152,7 @@ class CorrectStringPlayer extends MultiPages {
    * @param tempCurrentTime 当前时间
    */
   _findPointsAndDraw(tempCurrentTime: number):void {
-    console.log("findPointsAndDraw", this._pagesInfo)
+    // console.log("findPointsAndDraw", this._pagesInfo)
     Object.keys(this._pagesInfo).forEach(pageId => {
       const page: Page = this._pagesInfo[pageId]
       page.findPointsAndDraw(this._firstPointTimestamp, tempCurrentTime)

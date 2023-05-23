@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-22 11:35:34
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-22 17:48:42
+ * @LastEditTime: 2023-05-23 10:58:07
  * @FilePath: /penCorrectPlayer/src/Page.ts
  * @Description: 
  */
@@ -89,22 +89,17 @@ class Page extends EventEmitter {
    * 根据时间找到需要绘制出来的点，然后进行绘制
    * @param tempCurrentTime 当前时间
    */
-  findPointsAndDraw(firstPointTimestamp:number, tempCurrentTime: number):void {
+  findPointsAndDraw(firstPointTimestamp: number, tempCurrentTime: number):void {
       // 需要绘制的点
       const pointIndex: number = this._leftPenDatas.findIndex((point: PenPointer, index:number) => {
         const bol = point.ts - firstPointTimestamp > tempCurrentTime
         return bol;
       })
-  
-      let drawPoints = this._leftPenDatas.splice(0, pointIndex === -1 ? this._leftPenDatas.length : pointIndex + 1);
+      let drawPoints  = this._leftPenDatas.splice(0, pointIndex === -1 ? this._leftPenDatas.length : pointIndex)
 
       if (drawPoints.length > 0) {
         // 设置当前真该绘制的点信息
         // 后期看下这个变量是否可以删除
-        // const currentDrawingInfo = { 
-        //   pageId: this._pageId,
-        //   drawingPoints: drawPoints
-        // }
         // @ts-ignore
         this.emit(Events.PAGE_DRAWING, drawPoints)
 
