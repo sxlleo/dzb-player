@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-23 10:28:03
+ * @LastEditTime: 2023-05-29 11:49:09
  * @FilePath: /penCorrectPlayer/src/CorrectStringPlayer.ts
  * @Description:
  */
@@ -140,7 +140,7 @@ class CorrectStringPlayer extends MultiPages {
     }
 
     // 更新当前时间
-    this.currentTime = tempCurrentTime;
+    this._setCurrentTime(tempCurrentTime)
 
     // 记录上一次的时间戳
     this._prevAnimationTimestamp = this._currentAnimationTimestamp;
@@ -267,7 +267,7 @@ class CorrectStringPlayer extends MultiPages {
    * 重新播放
    */
   replay(): void {
-    this.currentTime = 0;
+    this._setCurrentTime(0)
     this._clearCanvas();
     // 重新播放的话，需要重置leftPenData
     this._resetLeftPenDatas();
@@ -281,11 +281,12 @@ class CorrectStringPlayer extends MultiPages {
    */
   seek(time: number):void {
     this._clearCanvas();
+    // 把之前的重新绘制一遍
     this._resetLeftPenDatas();
     this._findPointsAndDraw(time);
 
     // 更新当前时间
-    this.currentTime = time
+    this._setCurrentTime(time)
   }
 
   /**
@@ -305,9 +306,9 @@ class CorrectStringPlayer extends MultiPages {
   /**
    * 当前时间设置
    * @param value 时间，单位毫秒
-   * todo: 更新时间需要做节流
+   * todo: 1.更新时间需要做节流;2.对外不需要暴露这个方法，需要改成内部调用，外部调用seek即可
    */
-  set currentTime(value: number) {
+  _setCurrentTime(value: number) {
     console.log("====currentTime", value)
     if(this._curTime !== value ) {
       // @ts-ignore
