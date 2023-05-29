@@ -2,11 +2,11 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-04-11 16:27:45
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-22 18:16:27
+ * @LastEditTime: 2023-05-29 14:39:24
  * @FilePath: /penCorrectPlayer/demo/index.js
  * @Description: 
  */
-import data from "./biji3.js"
+import data from "./biji4.js"
 
 const canvas = document.getElementsByTagName("canvas")[0];
 
@@ -14,7 +14,7 @@ let player;
 let penData = getPenData()
 
 function getPenData() {
-  return data.splice(0, 10000)
+  return data.splice(0, 100000000)
 }
 
 /**
@@ -86,9 +86,17 @@ function initializeAppendData() {
   })
 }
 
+function initializeShow() {
+  let btn = document.getElementById('show');
+  btn.addEventListener('click', function() {
+    // 直接设置播放器倍率
+    player.show()
+  })
+}
+
 function init() {
-  const { CorrectStringPlayer } = PenPlayer
-  player = new CorrectStringPlayer({
+  const { PenCorrectPlayer } = PenPlayer
+  player = new PenCorrectPlayer({
     12313: canvas
   })
   player.appendPagePenData(12313, penData, canvas)
@@ -97,5 +105,6 @@ function init() {
   initializePause()
   initializeDestroy()
   initializeAppendData()
+  initializeShow()
 }
 init()

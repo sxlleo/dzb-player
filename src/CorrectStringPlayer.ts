@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-29 11:49:09
+ * @LastEditTime: 2023-05-29 17:08:51
  * @FilePath: /penCorrectPlayer/src/CorrectStringPlayer.ts
  * @Description:
  */
@@ -140,7 +140,7 @@ class CorrectStringPlayer extends MultiPages {
     }
 
     // 更新当前时间
-    this._setCurrentTime(tempCurrentTime)
+    this.currentTime = tempCurrentTime;
 
     // 记录上一次的时间戳
     this._prevAnimationTimestamp = this._currentAnimationTimestamp;
@@ -152,106 +152,27 @@ class CorrectStringPlayer extends MultiPages {
    * @param tempCurrentTime 当前时间
    */
   _findPointsAndDraw(tempCurrentTime: number):void {
-    // console.log("findPointsAndDraw", this._pagesInfo)
+    // 正在绘制的点
+    let drawingPoints: PenPointer[] = []
     Object.keys(this._pagesInfo).forEach(pageId => {
       const page: Page = this._pagesInfo[pageId]
-      page.findPointsAndDraw(this._firstPointTimestamp, tempCurrentTime)
-
-      // // 需要绘制的点
-      // const pointIndex: number = page.leftPenDatas.findIndex((point: PenPointer, index:number) => {
-      //   const bol = point.ts - this._firstPointTimestamp > tempCurrentTime
-      //   // if(bol) {
-      //   //   console.log('===找到', index, point.ts, this._firstPointTimestamp, tempCurrentTime)
-      //   // }
-      //   return bol;
-      // })
-  
-      // let drawPoints = page.leftPenDatas.splice(0, pointIndex === -1 ? page.leftPenDatas.length : pointIndex + 1);
-
-      // if (drawPoints.length > 0) {
-      //   // console.log("===draw_num",pageId, drawPoints.length)
-      //   // 设置当前真该绘制的点信息
-      //   // 后期看下这个变量是否可以删除
-      //   const currentDrawingInfo = { 
-      //     pageId: Number(pageId),
-      //     drawingPoints: drawPoints
-      //   }
-      //   // @ts-ignore
-      //   this.emit(Events.DRAWING, currentDrawingInfo)
-
-      //   // 根据点的颜色，将drawPoints进行切分
-      //   const splitPoints = this._splitPointsByColor(drawPoints)
-
-      //   splitPoints.forEach((points, index) => {
-      //     // console.log("===draw_num1",pageId, points.length)
-      //     // 绘制点到canvas
-      //     this._drawPointsToCanvas(Number(pageId), points)
-      //   })
-      // }
+      const tempDrawingPoints:PenPointer[] = page.findPointsAndDraw(this._firstPointTimestamp, tempCurrentTime)
+      // 找到最后一个点时间最大的点集合
+      if(tempDrawingPoints.length > 0) {
+        if(drawingPoints.length === 0) {
+          drawingPoints = tempDrawingPoints
+        }
+        else {
+          if(drawingPoints[drawingPoints.length - 1].ts < tempDrawingPoints[tempDrawingPoints.length - 1].ts) {
+            drawingPoints = tempDrawingPoints
+          }
+        }
+      }
     })
+
+    // @ts-ignore
+    if(drawingPoints.length > 0) this.emit(Events.PAGE_DRAWING, drawingPoints)
   }
-
-  /**
-   * 根据点的颜色，将drawPoints进行切分
-   * @param drawPoints 需要绘制的点
-   * @returns 
-   */
-  // _splitPointsByColor(drawPoints: PenPointer[]): PenPointer[][] {
-  //   const splitPoints: PenPointer[][] = []
-  //   let tempPoints: PenPointer[] = []
-  //   drawPoints.forEach((point, index) => {
-  //     if (index === 0) {
-  //       tempPoints.push(point)
-  //     }
-  //     else {
-  //       if (point.strokeStyle === drawPoints[index - 1].strokeStyle) {
-  //         tempPoints.push(point)
-  //       }
-  //       else {
-  //         splitPoints.push(tempPoints)
-  //         tempPoints = [point]
-  //       }
-  //     }
-  //   })
-  //   splitPoints.push(tempPoints)
-  //   return splitPoints
-  // }
-
-  /**
-   * 绘制点到画布
-   * @param pageId 页面id
-   * @param drawPoints 需要绘制的点
-   */
-  // _drawPointsToCanvas(pageId: number, drawPoints: PenPointer[]):void {
-  //   // 当前页面信息
-  //   const pageInfo:any = this._pagesInfo[pageId]
-  //   // 上一个绘制的点
-  //   const prePointer = pageInfo.prevDrawPoint
-
-  //   const ctx:CanvasRenderingContext2D = pageInfo.canvas.getContext('2d');
-  //   // console.log("======pageInfo.canvas", pageInfo.canvas.parentElement.parentElement)
-  //   ctx.strokeStyle = drawPoints[0].strokeStyle
-  //   ctx.beginPath();
-  //   this._setLineConfigBeforePath(ctx)
-    
-  //   if (["PEN_DOWN", "PEN_MOVE"].includes(prePointer?.type)) {
-  //     ctx.moveTo(prePointer.x, prePointer.y);
-  //     console.log("===draw_num prePointer", prePointer.x, prePointer.y)
-  //   }
-  //   drawPoints.forEach((point, index) => {
-  //     if (point.type === "PEN_DOWN") {
-  //       ctx.moveTo(point.x, point.y);
-  //       // console.log("===PEN_DOWN")
-  //     } else {
-  //       ctx.lineTo(point.x, point.y);
-  //     }
-  //     if (index === drawPoints.length - 1) {
-  //       // 重置一下上一个绘制的点
-  //       pageInfo.prevDrawPoint = point;
-  //     }
-  //   });
-  //   ctx.stroke();
-  // }
 
   /**
    * 重置数据
@@ -267,7 +188,7 @@ class CorrectStringPlayer extends MultiPages {
    * 重新播放
    */
   replay(): void {
-    this._setCurrentTime(0)
+    this.currentTime = 0;
     this._clearCanvas();
     // 重新播放的话，需要重置leftPenData
     this._resetLeftPenDatas();
@@ -286,7 +207,7 @@ class CorrectStringPlayer extends MultiPages {
     this._findPointsAndDraw(time);
 
     // 更新当前时间
-    this._setCurrentTime(time)
+    this.currentTime = time
   }
 
   /**
@@ -308,7 +229,7 @@ class CorrectStringPlayer extends MultiPages {
    * @param value 时间，单位毫秒
    * todo: 1.更新时间需要做节流;2.对外不需要暴露这个方法，需要改成内部调用，外部调用seek即可
    */
-  _setCurrentTime(value: number) {
+  set currentTime(value: number) {
     console.log("====currentTime", value)
     if(this._curTime !== value ) {
       // @ts-ignore
