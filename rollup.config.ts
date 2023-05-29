@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-22 20:55:28
+ * @LastEditTime: 2023-05-29 18:27:09
  * @FilePath: /penCorrectPlayer/rollup.config.ts
  * @Description: 
  */
@@ -92,7 +92,7 @@ function createConfig(format, plugins = []) {
 				compress: {
 					ecma: 2015,
 					pure_getters: true,
-					drop_console: false
+					drop_console: true
 				},
 				safari10: true
 			}),

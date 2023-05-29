@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-29 17:08:51
+ * @LastEditTime: 2023-05-29 18:27:01
  * @FilePath: /penCorrectPlayer/src/CorrectStringPlayer.ts
  * @Description:
  */
@@ -154,6 +154,7 @@ class CorrectStringPlayer extends MultiPages {
   _findPointsAndDraw(tempCurrentTime: number):void {
     // 正在绘制的点
     let drawingPoints: PenPointer[] = []
+    let drawingPageId: string;
     Object.keys(this._pagesInfo).forEach(pageId => {
       const page: Page = this._pagesInfo[pageId]
       const tempDrawingPoints:PenPointer[] = page.findPointsAndDraw(this._firstPointTimestamp, tempCurrentTime)
@@ -161,17 +162,22 @@ class CorrectStringPlayer extends MultiPages {
       if(tempDrawingPoints.length > 0) {
         if(drawingPoints.length === 0) {
           drawingPoints = tempDrawingPoints
+          drawingPageId = pageId
         }
         else {
           if(drawingPoints[drawingPoints.length - 1].ts < tempDrawingPoints[tempDrawingPoints.length - 1].ts) {
             drawingPoints = tempDrawingPoints
+            drawingPageId = pageId
           }
         }
       }
     })
 
     // @ts-ignore
-    if(drawingPoints.length > 0) this.emit(Events.PAGE_DRAWING, drawingPoints)
+    if(drawingPoints.length > 0) this.emit(Events.DRAWING, {
+      pageId: drawingPageId,
+      drawingPoints
+    })
   }
 
   /**

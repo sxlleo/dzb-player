@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-11 15:09:36
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-22 18:00:35
+ * @LastEditTime: 2023-05-29 18:15:03
  * @FilePath: /penCorrectPlayer/src/MultiPages.ts
  * @Description: 
  */
@@ -134,14 +134,14 @@ class MultiPages extends EventEmitter {
 
   _createPage(pageId: number, canvas: HTMLCanvasElement): Page {
     const page = new Page(pageId, canvas, this._config.strokeWidth);
-    // @ts-ignore
-    page.on(Events.PAGE_DRAWING, (drawingPoints: PenPointer[]) => {
-      // @ts-ignore
-      this.emit(Events.DRAWING, {
-        pageId,
-        drawingPoints: drawingPoints
-      });
-    });
+    // // @ts-ignore
+    // page.on(Events.PAGE_DRAWING, (drawingPoints: PenPointer[]) => {
+    //   // @ts-ignore
+    //   this.emit(Events.DRAWING, {
+    //     pageId,
+    //     drawingPoints: drawingPoints
+    //   });
+    // });
     return page;
   }
 
