@@ -2,15 +2,14 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-11 15:09:36
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-06-01 10:12:56
+ * @LastEditTime: 2023-06-01 10:14:11
  * @FilePath: /penCorrectPlayer/src/MultiPages.ts
  * @Description:
  */
-import type { Config, PenPointer, Line, Pointer } from './types'
+import type { Config, PenPointer } from './types'
 import Page from './Page'
 
 import EventEmitter from './utils/EventEmitter'
-import { Events } from './EventsType'
 
 /**
  * 默认配置

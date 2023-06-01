@@ -2,12 +2,11 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-22 11:35:34
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-29 17:01:53
+ * @LastEditTime: 2023-06-01 10:14:06
  * @FilePath: /penCorrectPlayer/src/Page.ts
  * @Description:
  */
 import type { PenPointer, Line, Pointer } from './types'
-import { Events } from './EventsType'
 
 import EventEmitter from './utils/EventEmitter'
 
