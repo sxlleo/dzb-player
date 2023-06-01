@@ -4,7 +4,7 @@
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
  * @LastEditTime: 2023-05-22 18:00:26
  * @FilePath: /penCorrectPlayer/src/types.ts
- * @Description: 
+ * @Description:
  * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
  */
 /**
@@ -15,7 +15,7 @@ type PenPointer = {
   force?: number
   penModel?: number
   ts: number
-  type: 'PEN_DOWN' | 'PEN_MOVE'| 'PEN_UP'
+  type: 'PEN_DOWN' | 'PEN_MOVE' | 'PEN_UP'
   x: number
   y: number
 }
@@ -51,4 +51,4 @@ type Line = {
   points: Pointer[]
 }
 
-export type { Config, PenPointer, Line, Pointer };
+export type { Config, PenPointer, Line, Pointer }

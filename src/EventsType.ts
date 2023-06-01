@@ -4,7 +4,7 @@
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
  * @LastEditTime: 2023-05-22 16:03:51
  * @FilePath: /penCorrectPlayer/src/EventsType.ts
- * @Description: 
+ * @Description:
  */
 
 // video's events
@@ -19,6 +19,4 @@ const Events = {
   PAGE_DRAWING: 'page_drawing'
 }
 
-export {
-  Events
-}
+export { Events }
