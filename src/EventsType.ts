@@ -16,7 +16,7 @@ const Events = {
   // 正在绘制的点改变了
   DRAWING: 'drawing',
   // 页面正在绘制
-  PAGE_DRAWING: 'page_drawing'
+  PAGE_DRAWING: 'page_drawing',
 }
 
 export { Events }

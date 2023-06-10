@@ -18,7 +18,7 @@ const DefaultConfig: Config = {
   strokeWidth: 1,
   // 真实纸张的宽高A4
   realPageWidth: 210,
-  realPageHeight: 297
+  realPageHeight: 297,
 }
 
 /** 码点宽度 */
@@ -59,11 +59,14 @@ class MultiPages extends EventEmitter {
 
     this._config = {
       ...DefaultConfig,
-      ...config
+      ...config,
     }
 
     Object.keys(pageCanvas).forEach((pageId) => {
-      this._pagesInfo[pageId] = this._createPage(Number(pageId), pageCanvas[pageId])
+      this._pagesInfo[pageId] = this._createPage(
+        Number(pageId),
+        pageCanvas[pageId]
+      )
     })
   }
 
@@ -74,9 +77,17 @@ class MultiPages extends EventEmitter {
    * @param point 点
    * @returns
    */
-  _transformPagePointToCanvasPoint(canvasWidth: number, canvasHeight, point: PenPointer): PenPointer {
-    const x = this._roundNumber((canvasWidth * point.x) / (this._config.realPageWidth / x_point_size))
-    const y = this._roundNumber((canvasHeight * point.y) / (this._config.realPageHeight / y_point_size))
+  _transformPagePointToCanvasPoint(
+    canvasWidth: number,
+    canvasHeight,
+    point: PenPointer
+  ): PenPointer {
+    const x = this._roundNumber(
+      (canvasWidth * point.x) / (this._config.realPageWidth / x_point_size)
+    )
+    const y = this._roundNumber(
+      (canvasHeight * point.y) / (this._config.realPageHeight / y_point_size)
+    )
     return { ...point, x, y }
   }
 
@@ -90,7 +101,12 @@ class MultiPages extends EventEmitter {
    * @param datas 画笔数据
    * @param canvas 画布 如果是新画布，则需要添加画布
    */
-  appendPagePenData(pageId: number, datas: PenPointer[], canvas: HTMLCanvasElement, strokeStyle = 'black'): void {
+  appendPagePenData(
+    pageId: number,
+    datas: PenPointer[],
+    canvas: HTMLCanvasElement,
+    strokeStyle = 'black'
+  ): void {
     if (datas?.length <= 0) return
 
     let page: Page = this._pagesInfo[pageId]
@@ -105,7 +121,11 @@ class MultiPages extends EventEmitter {
     const arr = datas.map((point) => {
       return {
         strokeStyle,
-        ...this._transformPagePointToCanvasPoint(canvas.width, canvas.height, point)
+        ...this._transformPagePointToCanvasPoint(
+          canvas.width,
+          canvas.height,
+          point
+        ),
       }
     })
 

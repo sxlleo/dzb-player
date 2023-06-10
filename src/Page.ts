@@ -27,7 +27,13 @@ class Page extends EventEmitter {
   /**canvas context */
   _ctx: CanvasRenderingContext2D
 
-  constructor(pageId: number, canvas: HTMLCanvasElement, strokeWidth?: number, penDatas?: PenPointer[], leftPenDatas?: PenPointer[]) {
+  constructor(
+    pageId: number,
+    canvas: HTMLCanvasElement,
+    strokeWidth?: number,
+    penDatas?: PenPointer[],
+    leftPenDatas?: PenPointer[]
+  ) {
     super()
     this._pageId = pageId
     this._canvas = canvas
@@ -73,7 +79,7 @@ class Page extends EventEmitter {
       const pointer: Pointer = { x: dot.x, y: dot.y }
       if (dot.type === 'PEN_DOWN') {
         const line: Line = {
-          points: [pointer]
+          points: [pointer],
         }
         lines.push(line)
       } else if (dot.type === 'PEN_MOVE' || dot.type === 'PEN_UP') {
@@ -88,13 +94,21 @@ class Page extends EventEmitter {
    * 根据时间找到需要绘制出来的点，然后进行绘制
    * @param tempCurrentTime 当前时间
    */
-  findPointsAndDraw(firstPointTimestamp: number, tempCurrentTime: number): PenPointer[] {
+  findPointsAndDraw(
+    firstPointTimestamp: number,
+    tempCurrentTime: number
+  ): PenPointer[] {
     // 需要绘制的点
-    const pointIndex: number = this._leftPenDatas.findIndex((point: PenPointer, index: number) => {
-      const bol = point.ts - firstPointTimestamp > tempCurrentTime
-      return bol
-    })
-    const drawPoints = this._leftPenDatas.splice(0, pointIndex === -1 ? this._leftPenDatas.length : pointIndex)
+    const pointIndex: number = this._leftPenDatas.findIndex(
+      (point: PenPointer, index: number) => {
+        const bol = point.ts - firstPointTimestamp > tempCurrentTime
+        return bol
+      }
+    )
+    const drawPoints = this._leftPenDatas.splice(
+      0,
+      pointIndex === -1 ? this._leftPenDatas.length : pointIndex
+    )
 
     if (drawPoints.length > 0) {
       // 设置当前真该绘制的点信息
@@ -147,7 +161,11 @@ class Page extends EventEmitter {
 
     if (['PEN_DOWN', 'PEN_MOVE'].includes(this._prevDrawPoint?.type)) {
       this._ctx.moveTo(this._prevDrawPoint.x, this._prevDrawPoint.y)
-      console.log('===draw_num this._prevDrawPoint', this._prevDrawPoint.x, this._prevDrawPoint.y)
+      console.log(
+        '===draw_num this._prevDrawPoint',
+        this._prevDrawPoint.x,
+        this._prevDrawPoint.y
+      )
     }
     drawPoints.forEach((point, index) => {
       if (point.type === 'PEN_DOWN') {

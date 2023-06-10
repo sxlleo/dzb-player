@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-04-11 16:27:45
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-29 14:39:24
+ * @LastEditTime: 2023-06-06 12:07:01
  * @FilePath: /penCorrectPlayer/demo/index.js
  * @Description: 
  */
@@ -11,10 +11,11 @@ import data from "./biji4.js"
 const canvas = document.getElementsByTagName("canvas")[0];
 
 let player;
-let penData = getPenData()
+// let penData = getPenData()
 
 function getPenData() {
-  return data.splice(0, 100000000)
+  const textAreaEle = document.getElementById('pen-datas')
+  return formatContent(textAreaEle.value)
 }
 
 /**
@@ -94,12 +95,38 @@ function initializeShow() {
   })
 }
 
+function initializePenDatas() {
+  const textAreaEle = document.getElementById('pen-datas')
+  textAreaEle.value = data
+}
+
+// 格式化内容
+function formatContent(content) {
+  if (content.length <= 0) return []
+
+  const str = content.replaceAll('}', '},')
+  let arr = []
+
+  // try {
+  //   arr = JSON.parse(`[${str.slice(0, str.length - 2)}]`)
+  // } catch (err) {
+  //   throw new Error(`【AliSourceHandlerError】${err.message}`)
+  // }
+  console.log("str", str[0])
+  console.log("str1", str[str.length - 1])
+  arr = JSON.parse(`[${str.slice(0, str.length - 1)}]`)
+
+  return arr
+}
+
 function init() {
-  const { PenCorrectPlayer } = PenPlayer
+  initializePenDatas();
+
+  const { PenCorrectPlayer } = window.PenPlayer
   player = new PenCorrectPlayer({
     12313: canvas
   })
-  player.appendPagePenData(12313, penData, canvas)
+  player.appendPagePenData(12313, getPenData(), canvas)
   initializeTimer()
   initializeRate()
   initializePause()

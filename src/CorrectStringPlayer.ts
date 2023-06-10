@@ -68,7 +68,7 @@ class CorrectStringPlayer extends MultiPages {
       const pointer: Pointer = { x: dot.x, y: dot.y }
       if (dot.type === 'PEN_DOWN') {
         const line: Line = {
-          points: [pointer]
+          points: [pointer],
         }
         lines.push(line)
       } else if (dot.type === 'PEN_MOVE' || dot.type === 'PEN_UP') {
@@ -96,7 +96,9 @@ class CorrectStringPlayer extends MultiPages {
     if (this._isplaying) return
     this._isplaying = true
 
-    this._myRequestAnimationFrame = window.requestAnimationFrame(this._doAnimationStep.bind(this))
+    this._myRequestAnimationFrame = window.requestAnimationFrame(
+      this._doAnimationStep.bind(this)
+    )
     console.log('play')
   }
 
@@ -111,7 +113,9 @@ class CorrectStringPlayer extends MultiPages {
     this._currentAnimationTimestamp = timestamp
 
     // 改变的时间
-    const changTime = this._rate * (this._currentAnimationTimestamp - this._prevAnimationTimestamp)
+    const changTime =
+      this._rate *
+      (this._currentAnimationTimestamp - this._prevAnimationTimestamp)
     // 设置当前时间
     const tempCurrentTime = this._curTime + changTime
 
@@ -127,7 +131,9 @@ class CorrectStringPlayer extends MultiPages {
     // 如果有未完成的页面，继续动画
     if (undonePageId || tempCurrentTime < this.totalTime) {
       // 继续animation
-      this._myRequestAnimationFrame = window.requestAnimationFrame(this._doAnimationStep.bind(this))
+      this._myRequestAnimationFrame = window.requestAnimationFrame(
+        this._doAnimationStep.bind(this)
+      )
     } else {
       // @ts-ignore
       this.emit(Events.TIME_ENDED)
@@ -155,14 +161,20 @@ class CorrectStringPlayer extends MultiPages {
     let drawingPageId: string
     Object.keys(this._pagesInfo).forEach((pageId) => {
       const page: Page = this._pagesInfo[pageId]
-      const tempDrawingPoints: PenPointer[] = page.findPointsAndDraw(this._firstPointTimestamp, tempCurrentTime)
+      const tempDrawingPoints: PenPointer[] = page.findPointsAndDraw(
+        this._firstPointTimestamp,
+        tempCurrentTime
+      )
       // 找到最后一个点时间最大的点集合
       if (tempDrawingPoints.length > 0) {
         if (drawingPoints.length === 0) {
           drawingPoints = tempDrawingPoints
           drawingPageId = pageId
         } else {
-          if (drawingPoints[drawingPoints.length - 1].ts < tempDrawingPoints[tempDrawingPoints.length - 1].ts) {
+          if (
+            drawingPoints[drawingPoints.length - 1].ts <
+            tempDrawingPoints[tempDrawingPoints.length - 1].ts
+          ) {
             drawingPoints = tempDrawingPoints
             drawingPageId = pageId
           }
@@ -174,7 +186,7 @@ class CorrectStringPlayer extends MultiPages {
       // @ts-ignore
       this.emit(Events.DRAWING, {
         pageId: drawingPageId,
-        drawingPoints
+        drawingPoints,
       })
   }
 
@@ -261,7 +273,8 @@ class CorrectStringPlayer extends MultiPages {
    * 暂停
    */
   pause(): void {
-    this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame)
+    this._myRequestAnimationFrame &&
+      window.cancelAnimationFrame(this._myRequestAnimationFrame)
     this._prevAnimationTimestamp = null
     this._isplaying = false
   }
@@ -281,7 +294,8 @@ class CorrectStringPlayer extends MultiPages {
    * 销毁
    */
   destroy() {
-    this._myRequestAnimationFrame && window.cancelAnimationFrame(this._myRequestAnimationFrame)
+    this._myRequestAnimationFrame &&
+      window.cancelAnimationFrame(this._myRequestAnimationFrame)
     this._clearCanvas()
   }
 }

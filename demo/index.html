@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 12:02:56
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-05-29 14:38:13
+ * @LastEditTime: 2023-06-06 11:20:02
  * @FilePath: /penCorrectPlayer/demo/index.html
  * @Description: 
  * Copyright (c) 2023 by ${git_name} email: ${git_email}, All Rights Reserved.
@@ -32,6 +32,10 @@
       align-items: center;
       gap: 20px;
     }
+    textarea {
+      width: 400px;
+      height: 200px;
+    }
   </style>
 </head>
 <body>
@@ -39,6 +43,9 @@
   <div class="canvas-container">
     <canvas width="595" height="595"></canvas>
     <canvas width="595" height="595"></canvas>
+  </div>
+  <div>
+    请输入点阵笔数据：<textarea id="pen-datas" type="text" ></textarea>
   </div>
   <div class="control">
     <div>当前播放进度：<span id="current-time">0s</span></div>
