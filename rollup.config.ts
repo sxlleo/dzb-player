@@ -7,18 +7,18 @@
  * @Description:
  */
 // @ts-nocheck
-import path from 'path';
-import babel from '@rollup/plugin-babel';
-import json from '@rollup/plugin-json';
-import nodeResolve from '@rollup/plugin-node-resolve';
-import commonjs from '@rollup/plugin-commonjs';
-import typescript from '@rollup/plugin-typescript';
-import terser from '@rollup/plugin-terser';
+import path from 'path'
+import babel from '@rollup/plugin-babel'
+import json from '@rollup/plugin-json'
+import nodeResolve from '@rollup/plugin-node-resolve'
+import commonjs from '@rollup/plugin-commonjs'
+import typescript from '@rollup/plugin-typescript'
+import terser from '@rollup/plugin-terser'
 
-import pkg from './package.json';
+import pkg from './package.json'
 
 // resolve公共方法
-const resolve = (p) => path.resolve(__dirname, p);
+const resolve = (p) => path.resolve(__dirname, p)
 
 // 插件
 const plugins = [
@@ -35,7 +35,7 @@ const plugins = [
     exclude: 'node_modules/**',
     extensions: ['.js'],
   }),
-];
+]
 // 输出配置
 const outputConfigs = {
   'esm-bundler': {
@@ -50,21 +50,21 @@ const outputConfigs = {
     file: resolve(`dist/${pkg.filename}.global.js`),
     format: `iife`,
   },
-};
-const defaultFormats = ['esm-bundler', 'cjs', 'global'];
-const packageConfigs = [];
+}
+const defaultFormats = ['esm-bundler', 'cjs', 'global']
+const packageConfigs = []
 
 function createConfig(format, plugins = []) {
-  const isGlobalBuild = /global/.test(format);
+  const isGlobalBuild = /global/.test(format)
 
   // 不需要参与bundle的第三方包
   function resolveExternal() {
-    if (isGlobalBuild) return [];
+    if (isGlobalBuild) return []
 
     return [
       ...Object.keys(pkg.devDependencies || {}),
       ...Object.keys(pkg.dependencies || {}),
-    ];
+    ]
   }
 
   return {
@@ -102,11 +102,11 @@ function createConfig(format, plugins = []) {
     treeshake: {
       moduleSideEffects: false,
     },
-  };
+  }
 }
 
 defaultFormats.forEach((format) => {
-  packageConfigs.push(createConfig(format));
-});
+  packageConfigs.push(createConfig(format))
+})
 
-module.exports = packageConfigs;
+module.exports = packageConfigs

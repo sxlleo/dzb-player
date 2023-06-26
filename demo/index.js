@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-04-11 16:27:45
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-06-06 12:07:01
+ * @LastEditTime: 2023-06-26 18:52:30
  * @FilePath: /penCorrectPlayer/demo/index.js
  * @Description: 
  */
@@ -83,7 +83,7 @@ function initializeAppendData() {
   let btn = document.getElementById('append');
   btn.addEventListener('click', function() {
     // 直接设置播放器倍率
-    player.appendPenData(getPenData())
+    player.appendPagePenData(1, getPenData(), canvas)
   })
 }
 
@@ -126,7 +126,7 @@ function init() {
   player = new PenCorrectPlayer({
     12313: canvas
   })
-  player.appendPagePenData(12313, getPenData(), canvas)
+  // player.appendPagePenData(12313, getPenData(), canvas)
   initializeTimer()
   initializeRate()
   initializePause()
