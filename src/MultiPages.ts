@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-11 15:09:36
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-06-01 10:14:11
+ * @LastEditTime: 2023-07-04 17:06:44
  * @FilePath: /penCorrectPlayer/src/MultiPages.ts
  * @Description:
  */
@@ -79,8 +79,8 @@ class MultiPages extends EventEmitter {
    */
   _transformPagePointToCanvasPoint(
     canvasWidth: number,
-    canvasHeight,
-    point: PenPointer
+    canvasHeight: number,
+    point: any
   ): PenPointer {
     const x = this._roundNumber(
       (canvasWidth * point.x) / (this._config.realPageWidth / x_point_size)
@@ -88,7 +88,7 @@ class MultiPages extends EventEmitter {
     const y = this._roundNumber(
       (canvasHeight * point.y) / (this._config.realPageHeight / y_point_size)
     )
-    return { ...point, x, y }
+    return { ...point, x, y, originalX: point.x, originalY: point.y }
   }
 
   _roundNumber(num: number) {
@@ -121,11 +121,11 @@ class MultiPages extends EventEmitter {
     const arr = datas.map((point) => {
       return {
         strokeStyle,
-        ...this._transformPagePointToCanvasPoint(
-          canvas.width,
-          canvas.height,
-          point
-        ),
+        ...this._transformPagePointToCanvasPoint(canvas.width, canvas.height, {
+          ...point,
+          originalX: point.x,
+          originalY: point.y,
+        }),
       }
     })
 
@@ -144,6 +144,31 @@ class MultiPages extends EventEmitter {
         this._firstPointTimestamp = pagePenDatas[0].ts
       }
     }
+  }
+
+  /**
+   * 当页面尺寸发生变化
+   */
+  update(): void {
+    //
+    Object.keys(this._pagesInfo).forEach((pageId) => {
+      const page: Page = this._pagesInfo[pageId]
+
+      const datas = page.penDatas.map((point) => {
+        return {
+          ...point,
+          ...this._transformPagePointToCanvasPoint(
+            page.canvas.width,
+            page.canvas.height,
+            { x: point.originalX, y: point.originalY }
+          ),
+        }
+      })
+
+      page.penDatas = datas
+      page.leftPenDatas = [...datas]
+      page.showToCanvas()
+    })
   }
 
   _createPage(pageId: number, canvas: HTMLCanvasElement): Page {

@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-06-01 10:12:24
+ * @LastEditTime: 2023-07-04 15:37:46
  * @FilePath: /penCorrectPlayer/src/CorrectStringPlayer.ts
  * @Description:
  */
@@ -156,6 +156,7 @@ class CorrectStringPlayer extends MultiPages {
    * @param tempCurrentTime 当前时间
    */
   _findPointsAndDraw(tempCurrentTime: number): void {
+    console.log('根据当前时间找点并进行绘制')
     // 正在绘制的点
     let drawingPoints: PenPointer[] = []
     let drawingPageId: string
@@ -204,6 +205,7 @@ class CorrectStringPlayer extends MultiPages {
    * 重新播放
    */
   replay(): void {
+    console.log('replay')
     this.currentTime = 0
     this._clearCanvas()
     // 重新播放的话，需要重置leftPenData
@@ -217,6 +219,7 @@ class CorrectStringPlayer extends MultiPages {
    * @param time 时间，单位毫秒
    */
   seek(time: number): void {
+    console.log('seek')
     this._clearCanvas()
     // 把之前的重新绘制一遍
     this._resetLeftPenDatas()
@@ -294,6 +297,7 @@ class CorrectStringPlayer extends MultiPages {
    * 销毁
    */
   destroy() {
+    console.log('destroy')
     this._myRequestAnimationFrame &&
       window.cancelAnimationFrame(this._myRequestAnimationFrame)
     this._clearCanvas()

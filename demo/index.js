@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-04-11 16:27:45
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-06-26 18:52:30
+ * @LastEditTime: 2023-07-04 15:55:09
  * @FilePath: /penCorrectPlayer/demo/index.js
  * @Description: 
  */
@@ -90,6 +90,7 @@ function initializeAppendData() {
 function initializeShow() {
   let btn = document.getElementById('show');
   btn.addEventListener('click', function() {
+    player.appendPagePenData(1, getPenData(), canvas)
     // 直接设置播放器倍率
     player.show()
   })
@@ -98,6 +99,15 @@ function initializeShow() {
 function initializePenDatas() {
   const textAreaEle = document.getElementById('pen-datas')
   textAreaEle.value = data
+}
+
+function initializeShowCanvas() {
+  const button = document.getElementById('showCanvas')
+  button.addEventListener('click', function() {
+    // canvas.parentElement.style.display = 'block'
+    const rect = canvas.parentElement.getBoundingClientRect()
+    console.log("canvas.parentElement", rect)
+  })
 }
 
 // 格式化内容
@@ -133,5 +143,6 @@ function init() {
   initializeDestroy()
   initializeAppendData()
   initializeShow()
+  initializeShowCanvas()
 }
 init()
