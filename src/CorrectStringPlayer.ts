@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-04 15:37:46
+ * @LastEditTime: 2023-07-04 17:29:42
  * @FilePath: /penCorrectPlayer/src/CorrectStringPlayer.ts
  * @Description:
  */
@@ -227,6 +227,32 @@ class CorrectStringPlayer extends MultiPages {
 
     // 更新当前时间
     this.currentTime = time
+  }
+
+  /**
+   * 当页面尺寸发生变化
+   */
+  update(): void {
+    console.log('update')
+    Object.keys(this._pagesInfo).forEach((pageId) => {
+      const page: Page = this._pagesInfo[pageId]
+
+      const datas = page.penDatas.map((point) => {
+        return {
+          ...point,
+          ...this._transformPagePointToCanvasPoint(
+            page.canvas.width,
+            page.canvas.height,
+            { x: point.originalX, y: point.originalY }
+          ),
+        }
+      })
+
+      page.penDatas = datas
+      page.leftPenDatas = [...datas]
+    })
+
+    this._findPointsAndDraw(this.currentTime)
   }
 
   /**

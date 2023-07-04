@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-11 15:09:36
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-04 17:06:44
+ * @LastEditTime: 2023-07-04 17:28:09
  * @FilePath: /penCorrectPlayer/src/MultiPages.ts
  * @Description:
  */
@@ -144,31 +144,6 @@ class MultiPages extends EventEmitter {
         this._firstPointTimestamp = pagePenDatas[0].ts
       }
     }
-  }
-
-  /**
-   * 当页面尺寸发生变化
-   */
-  update(): void {
-    //
-    Object.keys(this._pagesInfo).forEach((pageId) => {
-      const page: Page = this._pagesInfo[pageId]
-
-      const datas = page.penDatas.map((point) => {
-        return {
-          ...point,
-          ...this._transformPagePointToCanvasPoint(
-            page.canvas.width,
-            page.canvas.height,
-            { x: point.originalX, y: point.originalY }
-          ),
-        }
-      })
-
-      page.penDatas = datas
-      page.leftPenDatas = [...datas]
-      page.showToCanvas()
-    })
   }
 
   _createPage(pageId: number, canvas: HTMLCanvasElement): Page {
