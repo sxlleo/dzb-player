@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-03-23 11:57:00
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-04 17:32:45
+ * @LastEditTime: 2023-07-04 17:50:24
  * @FilePath: /penCorrectPlayer/rollup.config.ts
  * @Description:
  */
@@ -20,22 +20,7 @@ import pkg from './package.json'
 // resolve公共方法
 const resolve = (p) => path.resolve(__dirname, p)
 
-// 插件
-const plugins = [
-  commonjs(),
-  nodeResolve(),
-  typescript({
-    tsconfig: './tsconfig.json',
-    declaration: true,
-    declarationDir: 'types',
-  }),
-  json(),
-  babel({
-    presets: ['@babel/preset-env'],
-    exclude: 'node_modules/**',
-    extensions: ['.js'],
-  }),
-]
+const env = process.env.NODE_ENV
 // 输出配置
 const outputConfigs = {
   'esm-bundler': {
@@ -89,7 +74,7 @@ function createConfig(format, plugins = []) {
         compress: {
           ecma: 2015,
           pure_getters: true,
-          drop_console: true,
+          drop_console: env === 'development' ? false : true,
         },
         safari10: true,
       }),
