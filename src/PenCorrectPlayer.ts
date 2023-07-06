@@ -2,8 +2,8 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-04 17:29:42
- * @FilePath: /penCorrectPlayer/src/CorrectStringPlayer.ts
+ * @LastEditTime: 2023-07-06 18:57:27
+ * @FilePath: /penCorrectPlayer/src/PenCorrectPlayer.ts
  * @Description:
  */
 // import { difference } from 'lodash-es'
@@ -21,7 +21,7 @@ type DrawingInfo = {
   drawingPoints: PenPointer[]
 }
 
-class CorrectStringPlayer extends MultiPages {
+class PenCorrectPlayer extends MultiPages {
   /**
    * 当前时间（毫秒）
    */
@@ -106,7 +106,7 @@ class CorrectStringPlayer extends MultiPages {
    * 帧动画
    * @param timestamp 时间戳
    */
-  _doAnimationStep(timestamp: number) {
+  _doAnimationStep(timestamp: number): void {
     if (!this._prevAnimationTimestamp) {
       this._prevAnimationTimestamp = timestamp
     }
@@ -322,14 +322,18 @@ class CorrectStringPlayer extends MultiPages {
   /**
    * 销毁
    */
-  destroy() {
+  destroy(): void {
     console.log('destroy')
     this._myRequestAnimationFrame &&
       window.cancelAnimationFrame(this._myRequestAnimationFrame)
+
+    this._currentDrawingInfo = null
     this._clearCanvas()
+
+    super.destroy()
   }
 }
 
-export default CorrectStringPlayer
+export default PenCorrectPlayer
 
 // export { Events, PageCanvas }

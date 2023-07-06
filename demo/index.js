@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-04-11 16:27:45
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-04 15:55:09
+ * @LastEditTime: 2023-07-06 18:56:18
  * @FilePath: /penCorrectPlayer/demo/index.js
  * @Description: 
  */
@@ -109,6 +109,7 @@ function initializeShowCanvas() {
     console.log("canvas.parentElement", rect)
   })
 }
+
 
 // 格式化内容
 function formatContent(content) {

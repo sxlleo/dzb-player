@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-22 11:35:34
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-04 17:12:30
+ * @LastEditTime: 2023-07-06 18:47:26
  * @FilePath: /penCorrectPlayer/src/Page.ts
  * @Description:
  */
@@ -211,6 +211,14 @@ class Page extends EventEmitter {
 
   get canvas(): HTMLCanvasElement {
     return this._canvas
+  }
+
+  destroy(): void {
+    this._canvas = null
+    this._ctx = null
+    this._penDatas = []
+    this._leftPenDatas = []
+    this._prevDrawPoint = null
   }
 
   clear(): void {

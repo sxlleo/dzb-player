@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-11 15:09:36
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-04 17:28:09
+ * @LastEditTime: 2023-07-06 18:59:30
  * @FilePath: /penCorrectPlayer/src/MultiPages.ts
  * @Description:
  */
@@ -91,7 +91,7 @@ class MultiPages extends EventEmitter {
     return { ...point, x, y, originalX: point.x, originalY: point.y }
   }
 
-  _roundNumber(num: number) {
+  _roundNumber(num: number): number {
     return Math.round(num * Math.pow(10, 15)) / Math.pow(10, 15)
   }
 
@@ -146,9 +146,28 @@ class MultiPages extends EventEmitter {
     }
   }
 
+  /**
+   * 创建页面
+   * @param pageId 页面id
+   * @param canvas canvas
+   * @returns 页面实例
+   */
   _createPage(pageId: number, canvas: HTMLCanvasElement): Page {
     const page = new Page(pageId, canvas, this._config.strokeWidth)
     return page
+  }
+
+  /**
+   * 销毁
+   */
+  destroy(): void {
+    Object.keys(this._pagesInfo).forEach((pageId) => {
+      const page = this._pagesInfo[pageId]
+      page.destroy()
+    })
+    this._pagesInfo = null
+    this._config = null
+    this._firstPointTimestamp = null
   }
 
   get firstPointTimestramp(): number {
@@ -156,6 +175,7 @@ class MultiPages extends EventEmitter {
   }
 
   get lastPointTimestamp(): number {
+    if (!this._pagesInfo) return 0
     let lastTimestamp: number
 
     Object.keys(this._pagesInfo).forEach((pageId) => {
