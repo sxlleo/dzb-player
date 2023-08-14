@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-06 18:57:27
+ * @LastEditTime: 2023-08-14 18:33:42
  * @FilePath: /penCorrectPlayer/src/PenCorrectPlayer.ts
  * @Description:
  */
@@ -55,28 +55,6 @@ class PenCorrectPlayer extends MultiPages {
   constructor(pageCanvas: PageCanvas, config?: Config) {
     super(pageCanvas, config)
     console.log('pageCanvas', pageCanvas)
-  }
-
-  /**
-   * 解析成线的数组
-   * @param penDatas 画笔数据
-   * @returns
-   */
-  _parseToLines(penDatas: PenPointer[]): Line[] {
-    const lines: Line[] = []
-    penDatas.forEach((dot) => {
-      const pointer: Pointer = { x: dot.x, y: dot.y }
-      if (dot.type === 'PEN_DOWN') {
-        const line: Line = {
-          points: [pointer],
-        }
-        lines.push(line)
-      } else if (dot.type === 'PEN_MOVE' || dot.type === 'PEN_UP') {
-        lines[lines.length - 1].points.push(pointer)
-      }
-    })
-
-    return lines
   }
 
   /**

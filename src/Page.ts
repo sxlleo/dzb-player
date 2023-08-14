@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-22 11:35:34
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-06 18:47:26
+ * @LastEditTime: 2023-08-14 18:33:55
  * @FilePath: /penCorrectPlayer/src/Page.ts
  * @Description:
  */
@@ -50,7 +50,6 @@ class Page extends EventEmitter {
    * @returns
    */
   showToCanvas(): void {
-    // const ctx: CanvasRenderingContext2D = this._canvas.getContext("2d");
     // 所有线数据
     const lines: Line[] = this._parseToLines(this._penDatas)
     if (lines.length === 0) return
@@ -75,15 +74,22 @@ class Page extends EventEmitter {
    */
   _parseToLines(penDatas: PenPointer[]): Line[] {
     const lines: Line[] = []
+    let currentLine: Line
     penDatas.forEach((dot) => {
       const pointer: Pointer = { x: dot.x, y: dot.y }
       if (dot.type === 'PEN_DOWN') {
-        const line: Line = {
+        currentLine = {
           points: [pointer],
         }
-        lines.push(line)
+        lines.push(currentLine)
       } else if (dot.type === 'PEN_MOVE' || dot.type === 'PEN_UP') {
-        lines[lines.length - 1].points.push(pointer)
+        if (!currentLine) {
+          currentLine = {
+            points: [pointer],
+          }
+          lines.push(currentLine)
+        }
+        currentLine.points.push(pointer)
       }
     })
 

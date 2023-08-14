@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-11 15:09:36
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-07-06 18:59:30
+ * @LastEditTime: 2023-08-14 18:05:37
  * @FilePath: /penCorrectPlayer/src/MultiPages.ts
  * @Description:
  */
@@ -82,12 +82,18 @@ class MultiPages extends EventEmitter {
     canvasHeight: number,
     point: any
   ): PenPointer {
-    const x = this._roundNumber(
-      (canvasWidth * point.x) / (this._config.realPageWidth / x_point_size)
-    )
-    const y = this._roundNumber(
-      (canvasHeight * point.y) / (this._config.realPageHeight / y_point_size)
-    )
+    // 根据点阵纸的宽高和canvas的宽高，计算出点在canvas上的坐标，如果存在x优先使用x，如果没有x，则
+    const x = point.x
+      ? this._roundNumber(
+          (canvasWidth * point.x) / (this._config.realPageWidth / x_point_size)
+        )
+      : point.xP * this._config.realPageWidth
+    const y = point.y
+      ? this._roundNumber(
+          (canvasHeight * point.y) /
+            (this._config.realPageHeight / y_point_size)
+        )
+      : point.yP * this._config.realPageHeight
     return { ...point, x, y, originalX: point.x, originalY: point.y }
   }
 

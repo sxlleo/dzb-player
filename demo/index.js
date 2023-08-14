@@ -90,7 +90,9 @@ function initializeAppendData() {
 function initializeShow() {
   let btn = document.getElementById('show');
   btn.addEventListener('click', function() {
-    player.appendPagePenData(1, getPenData(), canvas)
+    const data = getPenData()
+    console.log("data", data)
+    player.appendPagePenData(1, data, canvas)
     // 直接设置播放器倍率
     player.show()
   })
