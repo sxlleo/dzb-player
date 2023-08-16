@@ -1,6 +1,6 @@
 {
   "name": "@aixuexi/pen-correct-player",
-  "version": "1.0.16",
+  "version": "1.0.17",
   "description": "",
   "main": "dist/penCorrectPlayer.cjs.js",
   "module": "dist/penCorrectPlayer.esm-bundler.js",

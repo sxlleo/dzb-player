@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-11 15:09:36
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-08-14 18:05:37
+ * @LastEditTime: 2023-08-16 10:55:06
  * @FilePath: /penCorrectPlayer/src/MultiPages.ts
  * @Description:
  */
@@ -82,19 +82,19 @@ class MultiPages extends EventEmitter {
     canvasHeight: number,
     point: any
   ): PenPointer {
-    // 根据点阵纸的宽高和canvas的宽高，计算出点在canvas上的坐标，如果存在x优先使用x，如果没有x，则
+    // 根据点阵纸的宽高和canvas的宽高，计算出点在canvas上的坐标，如果存在x优先使用x，如果没有x，则使用xP，y是同样的逻辑
     const x = point.x
       ? this._roundNumber(
           (canvasWidth * point.x) / (this._config.realPageWidth / x_point_size)
         )
-      : point.xP * this._config.realPageWidth
+      : point.xP * canvasWidth
     const y = point.y
       ? this._roundNumber(
           (canvasHeight * point.y) /
             (this._config.realPageHeight / y_point_size)
         )
-      : point.yP * this._config.realPageHeight
-    return { ...point, x, y, originalX: point.x, originalY: point.y }
+      : point.yP * canvasHeight
+    return { ...point, x, y, originalPoint: point }
   }
 
   _roundNumber(num: number): number {
@@ -127,11 +127,11 @@ class MultiPages extends EventEmitter {
     const arr = datas.map((point) => {
       return {
         strokeStyle,
-        ...this._transformPagePointToCanvasPoint(canvas.width, canvas.height, {
-          ...point,
-          originalX: point.x,
-          originalY: point.y,
-        }),
+        ...this._transformPagePointToCanvasPoint(
+          canvas.width,
+          canvas.height,
+          point
+        ),
       }
     })
 

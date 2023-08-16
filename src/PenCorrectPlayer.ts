@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-02-21 17:09:53
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-08-14 18:33:42
+ * @LastEditTime: 2023-08-14 18:49:02
  * @FilePath: /penCorrectPlayer/src/PenCorrectPlayer.ts
  * @Description:
  */
@@ -221,7 +221,7 @@ class PenCorrectPlayer extends MultiPages {
           ...this._transformPagePointToCanvasPoint(
             page.canvas.width,
             page.canvas.height,
-            { x: point.originalX, y: point.originalY }
+            point.originalPoint
           ),
         }
       })
