@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-11 15:09:36
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-08-16 10:55:06
+ * @LastEditTime: 2023-08-17 10:23:02
  * @FilePath: /penCorrectPlayer/src/MultiPages.ts
  * @Description:
  */
@@ -62,9 +62,9 @@ class MultiPages extends EventEmitter {
       ...config,
     }
 
-    Object.keys(pageCanvas).forEach((pageId) => {
+    Object.keys(pageCanvas).forEach((pageId: string) => {
       this._pagesInfo[pageId] = this._createPage(
-        Number(pageId),
+        String(pageId),
         pageCanvas[pageId]
       )
     })
@@ -108,7 +108,7 @@ class MultiPages extends EventEmitter {
    * @param canvas 画布 如果是新画布，则需要添加画布
    */
   appendPagePenData(
-    pageId: number,
+    pageId: string,
     datas: PenPointer[],
     canvas: HTMLCanvasElement,
     strokeStyle = 'black'
@@ -124,7 +124,17 @@ class MultiPages extends EventEmitter {
     let pagePenDatas = page?.penDatas ?? []
     let pageLeftPenDatas = page?.leftPenDatas ?? []
 
+    // 设置上一个点的默认值为上一个绘制的点
+    let prevPoint = pagePenDatas[pagePenDatas.length - 1]
     const arr = datas.map((point) => {
+      // 如果当前点是move点，且上一个点是up点或者上一个点不存在，则把当前点改成down点
+      if (point.type === 'PEN_MOVE') {
+        if (!prevPoint || prevPoint.type === 'PEN_UP') {
+          point.type = 'PEN_DOWN'
+        }
+      }
+
+      prevPoint = point
       return {
         strokeStyle,
         ...this._transformPagePointToCanvasPoint(
@@ -158,7 +168,7 @@ class MultiPages extends EventEmitter {
    * @param canvas canvas
    * @returns 页面实例
    */
-  _createPage(pageId: number, canvas: HTMLCanvasElement): Page {
+  _createPage(pageId: string, canvas: HTMLCanvasElement): Page {
     const page = new Page(pageId, canvas, this._config.strokeWidth)
     return page
   }

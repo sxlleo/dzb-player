@@ -1,7 +1,7 @@
 {
   "name": "@aixuexi/pen-correct-player",
-  "version": "1.0.17",
-  "description": "",
+  "version": "1.0.18",
+  "description": "点阵笔渲染工具",
   "main": "dist/penCorrectPlayer.cjs.js",
   "module": "dist/penCorrectPlayer.esm-bundler.js",
   "type": "module",

@@ -2,7 +2,7 @@
  * @Author: songxiaolin songxiaolin@aixuexi.com
  * @Date: 2023-05-22 11:35:34
  * @LastEditors: songxiaolin songxiaolin@aixuexi.com
- * @LastEditTime: 2023-08-14 18:33:55
+ * @LastEditTime: 2023-08-16 20:31:03
  * @FilePath: /penCorrectPlayer/src/Page.ts
  * @Description:
  */
@@ -12,7 +12,7 @@ import EventEmitter from './utils/EventEmitter'
 
 class Page extends EventEmitter {
   /**页面id */
-  _pageId: number
+  _pageId: string
   /**画布元素 */
   _canvas: HTMLCanvasElement
   /**所有点 */
@@ -28,7 +28,7 @@ class Page extends EventEmitter {
   _ctx: CanvasRenderingContext2D
 
   constructor(
-    pageId: number,
+    pageId: string,
     canvas: HTMLCanvasElement,
     strokeWidth?: number,
     penDatas?: PenPointer[],
