@@ -1,7 +1,7 @@
 /*
- * @Author: songxiaolin songxiaolin@aixuexi.com
+ * @Author: songxiaolin sxldongman@163.com
  * @Date: 2023-05-22 18:02:51
- * @LastEditors: songxiaolin songxiaolin@aixuexi.com
+ * @LastEditors: songxiaolin sxldongman@163.com
  * @LastEditTime: 2023-07-06 18:13:34
  * @FilePath: /penCorrectPlayer/src/index.ts
  * @Description:

@@ -1,5 +1,5 @@
 {
-  "name": "@aixuexi/pen-correct-player",
+  "name": "dzb-player",
   "version": "1.0.18",
   "description": "点阵笔渲染工具",
   "main": "dist/penCorrectPlayer.cjs.js",
@@ -19,7 +19,7 @@
     "pretest": "npm run build",
     "preview": "browser-sync start --server --startPath /demo/index.html --files './dist/*'"
   },
-  "author": "songxiaolin@aixuexi.com",
+  "author": "sxldongman@163.com",
   "license": "ISC",
   "devDependencies": {
     "@babel/core": "^7.21.3",
